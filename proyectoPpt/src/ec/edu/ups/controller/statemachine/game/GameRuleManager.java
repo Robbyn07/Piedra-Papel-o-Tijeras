@@ -6,7 +6,7 @@ import ec.edu.ups.controller.statemachine.GameState;
 import ec.edu.ups.tools.ControlManager;
 import ec.edu.ups.tools.Keyboard;
 
-public class GameManager implements GameState {
+public class GameRuleManager implements GameState {
 
     // SpriteSheet sheet = new
     // SpriteSheet("/ec/edu/ups/resources/textures/damas64.png", 64, false);
@@ -27,7 +27,7 @@ public class GameManager implements GameState {
 	long startTime;
 	long estimatedTime;
 	
-    public GameManager() {
+    public GameRuleManager() {
 		super();
 		timeCounter();
 	}

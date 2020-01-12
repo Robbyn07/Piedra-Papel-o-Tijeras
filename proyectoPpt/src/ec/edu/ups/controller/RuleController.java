@@ -1,6 +1,7 @@
-package ec.edu.ups.tools;
+package ec.edu.ups.controller;
 
 import ec.edu.ups.model.Player;
+import ec.edu.ups.tools.Keyboard;
 
 public class RuleController {
 
