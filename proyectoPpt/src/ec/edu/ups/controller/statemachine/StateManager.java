@@ -2,7 +2,7 @@ package ec.edu.ups.controller.statemachine;
 
 import java.awt.Graphics;
 
-import ec.edu.ups.controller.statemachine.game.GameManager;
+import ec.edu.ups.controller.statemachine.game.GameRuleManager;
 
 public class StateManager {
 
@@ -21,7 +21,7 @@ public class StateManager {
     private void createStates() {
 
 	states = new GameState[1];
-	states[0] = new GameManager();
+	states[0] = new GameRuleManager();
 
     }
 
