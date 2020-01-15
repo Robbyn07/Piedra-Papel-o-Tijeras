@@ -32,7 +32,6 @@ public class MainManager {
     }
 
     public void mainLoop() {
-
 		int aps = 0;
 		int fps = 0;
 		int ups = 0;

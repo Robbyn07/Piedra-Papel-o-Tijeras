@@ -9,27 +9,25 @@ public class Window extends JFrame {
 
     private String title;
 
-    public Window(final String title, final Screen game, int width, int height) {
-	this.title = title;
-	configWindow(game, width, height);
+    public Window(final String title, final Screen game, int width, 
+    				int height) {
+		this.title = title;
+		configWindow(game, width, height);
     }
 
     private void configWindow(Screen game, int width, int height) {
-	setTitle(title);
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setResizable(false);
-	setSize(width, height);
-	// setIconImage(image);
-	setLayout(new BorderLayout());
-	add(game, BorderLayout.CENTER);
-	// setUndecorated(true);
-
-	setVisible(true);
-
-	pack();
-
-	setLocationRelativeTo(null);
-
+    	setTitle(title);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
+		setSize(width, height);
+		// setIconImage(image);
+		setLayout(new BorderLayout());
+		add(game, BorderLayout.CENTER);
+		// setUndecorated(true);
+	
+		setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
     }
 
 }
