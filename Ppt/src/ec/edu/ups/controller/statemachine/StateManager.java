@@ -5,26 +5,28 @@ import java.awt.Graphics;
 import ec.edu.ups.controller.statemachine.game.GameRuleManager;
 import ec.edu.ups.controller.statemachine.game.GameWinnerManager;
 
+
 public class StateManager {
 
 	private GameState[] states;
 	private GameState currentState;
 
+	
 	public StateManager() {
 		createStates();
 		createCurrentState();
 	}
 
+	
 	public GameState getCurrentState() {
 		return currentState;
 	}
 
+	
 	private void createStates() {
-
 		states = new GameState[2];
 		states[0] = new GameRuleManager();
 		states[1] = new GameWinnerManager();
-
 	}
 
 	private void createCurrentState() {

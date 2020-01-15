@@ -20,7 +20,8 @@ public class Keyboard implements KeyListener {
 		super();
 	}
 
-	public Keyboard(String rock1, String scissors1, String paper1, String rock2, String scissors2, String paper2) {
+	public Keyboard(String rock1, String scissors1, String paper1, 
+					String rock2, String scissors2, String paper2) {
 
 	}
 
@@ -56,7 +57,6 @@ public class Keyboard implements KeyListener {
 		rock2 = keys[KeyEvent.VK_LEFT];
 		paper2 = keys[KeyEvent.VK_UP];
 		scissors2 = keys[KeyEvent.VK_RIGHT];
-
 	}
 
 	@Override
@@ -66,7 +66,6 @@ public class Keyboard implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		keys[e.getKeyCode()] = true;
-
 	}
 
 	@Override

@@ -17,7 +17,8 @@ public class Element implements GameState {
 
 	private char option;
 
-	public Element(int pointX, int pointY, BufferedImage image, boolean selected, char option) {
+	public Element(int pointX, int pointY, BufferedImage image, 
+					boolean selected, char option) {
 		super();
 		this.pointX = pointX;
 		this.pointY = pointY;
@@ -76,7 +77,6 @@ public class Element implements GameState {
 	public void print(Graphics g) {
 		g.drawImage(getImage(), pointX, pointY, null);
 		g.dispose();
-
 	}
 
 }

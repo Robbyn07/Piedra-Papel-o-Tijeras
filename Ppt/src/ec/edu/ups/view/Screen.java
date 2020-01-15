@@ -34,18 +34,17 @@ public class Screen extends Canvas {
 
 		setFocusable(true);
 		requestFocus();
-
 	}
 
 	public void print(final StateManager stateManager) {
 		BufferStrategy buffer = getBufferStrategy();
+		
 		if (buffer == null) {
 			createBufferStrategy(3);
 			return;
 		}
 
 		Graphics g = buffer.getDrawGraphics();
-
 		g.setColor(Color.black);
 		g.fillRect(0, 0, width, height);
 
@@ -55,7 +54,6 @@ public class Screen extends Canvas {
 		g.dispose();
 
 		buffer.show();
-
 	}
 
 }
