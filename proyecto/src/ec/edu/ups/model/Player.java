@@ -1,14 +1,18 @@
 package ec.edu.ups.model;
 
 public class Player {
-	
+
 	private String name;
-	private Element [] elements; //3 posiciones establecidas: 0)pierda, 1)papel, 2)tijera
+
+	/* 3 posiciones establecidas: 0 = piedra; 1 = papel; 2 = tijera */
+	private Element[] elements;
+	private int win;
 
 	public Player(String name, Element[] elements) {
 		super();
 		this.name = name;
 		this.elements = elements;
+		this.win = 0;
 	}
 
 	public String getName() {
@@ -26,7 +30,13 @@ public class Player {
 	public void setElements(Element[] elements) {
 		this.elements = elements;
 	}
-	
-	
-	
+
+	public int getWin() {
+		return win;
+	}
+
+	public void setWin() {
+		this.win++;
+	}
+
 }
