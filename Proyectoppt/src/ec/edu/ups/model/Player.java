@@ -3,7 +3,9 @@ package ec.edu.ups.model;
 public class Player {
 	
 	private String name;
-	private Element [] elements; //3 posiciones establecidas: 0)pierda, 1)papel, 2)tijera
+	
+	/* 3 posiciones establecidas: 0 = piedra; 1 = papel; 2 = tijera */
+	private Element [] elements;
 
 	public Player(String name, Element[] elements) {
 		super();

@@ -2,13 +2,13 @@
 package ec.edu.ups.view;
 
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 
 import ec.edu.ups.controller.statemachine.StateManager;
+import ec.edu.ups.main.Constants;
 import ec.edu.ups.tools.ControlManager;
 
 public class Screen extends Canvas {
@@ -34,28 +34,24 @@ public class Screen extends Canvas {
 
 		setFocusable(true);
 		requestFocus();
-
 	}
 
 	public void print(final StateManager stateManager) {
 		BufferStrategy buffer = getBufferStrategy();
+
 		if (buffer == null) {
-			createBufferStrategy(3);
+			createBufferStrategy(4);
 			return;
 		}
 
-		Graphics g = buffer.getDrawGraphics();
-
-		g.setColor(Color.black);
-		g.fillRect(0, 0, width, height);
-
+		Graphics2D g = (Graphics2D) buffer.getDrawGraphics();
+		g.scale(Constants.SCALED_X, Constants.SCALED_Y);
 		stateManager.print(g);
 
 		Toolkit.getDefaultToolkit().sync();
 		g.dispose();
 
 		buffer.show();
-
 	}
 
 }

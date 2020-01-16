@@ -25,72 +25,71 @@ public class SpriteSheet {
     final private Sprite[] sprites;
 
     public Sprite getSprites(final int index) {
-	return sprites[index];
+    	return sprites[index];
     }
 
     public Sprite getSprites(final int x, final int y) {
-	return sprites[x + y * widthSheetSprite];
+    	return sprites[x + y * widthSheetSprite];
     }
 
-    public SpriteSheet(final String path, final int sizeSprite, final boolean opaqueSheet) {
+    public SpriteSheet(final String path, final int sizeSprite, 
+    					final boolean opaqueSheet) {
+    	final BufferedImage image;
 
-	final BufferedImage image;
+		if (opaqueSheet) {
+		    image = LoadResources.loadOpaqueImage(path);
+		} else {
+		    image = LoadResources.loadTranslucentImage(path);
+		}
 
-	if (opaqueSheet) {
-	    image = LoadResources.loadOpaqueImage(path);
-	} else {
-	    image = LoadResources.loadTranslucentImage(path);
-	}
+		widthSheetPixels = image.getWidth();
+		heightSheetPixels = image.getHeight();
+	
+		widthSheetSprite = widthSheetPixels / sizeSprite;
+		heightSheetSprite = heightSheetPixels / sizeSprite;
+	
+		widthSprite = sizeSprite;
+		heightSprite = sizeSprite;
+	
+		sprites = new Sprite[widthSheetSprite * heightSheetSprite];
 
-	widthSheetPixels = image.getWidth();
-	heightSheetPixels = image.getHeight();
-
-	widthSheetSprite = widthSheetPixels / sizeSprite;
-	heightSheetSprite = heightSheetPixels / sizeSprite;
-
-	widthSprite = sizeSprite;
-	heightSprite = sizeSprite;
-
-	sprites = new Sprite[widthSheetSprite * heightSheetSprite];
-
-	fillSpritesFromImage(image);
-
+		fillSpritesFromImage(image);
     }
 
-    public SpriteSheet(final String path, final int widthSprite, final int heightSprite, final boolean opaqueSheet) {
-	final BufferedImage image;
+    public SpriteSheet(final String path, final int widthSprite, 
+    					final int heightSprite, final boolean opaqueSheet) {
+    	final BufferedImage image;
 
-	if (opaqueSheet) {
-	    image = LoadResources.loadOpaqueImage(path);
-	} else {
-	    image = LoadResources.loadTranslucentImage(path);
-	}
+		if (opaqueSheet) {
+		    image = LoadResources.loadOpaqueImage(path);
+		} else {
+		    image = LoadResources.loadTranslucentImage(path);
+		}
 
-	widthSheetPixels = image.getWidth();
-	heightSheetPixels = image.getHeight();
-
-	widthSheetSprite = widthSheetPixels / widthSprite;
-	heightSheetSprite = heightSheetPixels / heightSprite;
-
-	this.widthSprite = widthSprite;
-	this.heightSprite = heightSprite;
-
-	sprites = new Sprite[widthSheetSprite * heightSheetSprite];
-	fillSpritesFromImage(image);
-
+		widthSheetPixels = image.getWidth();
+		heightSheetPixels = image.getHeight();
+	
+		widthSheetSprite = widthSheetPixels / widthSprite;
+		heightSheetSprite = heightSheetPixels / heightSprite;
+	
+		this.widthSprite = widthSprite;
+		this.heightSprite = heightSprite;
+	
+		sprites = new Sprite[widthSheetSprite * heightSheetSprite];
+		fillSpritesFromImage(image);
     }
 
     private void fillSpritesFromImage(final BufferedImage image) {
-	for (int y = 0; y < heightSheetSprite; y++) {
-	    for (int x = 0; x < widthSheetSprite; x++) {
-
-		final int pointX = x * widthSprite;
-		final int pointY = y * heightSprite;
-
-		sprites[x + y * widthSheetSprite] = new Sprite(
-			image.getSubimage(pointX, pointY, widthSprite, heightSprite));
-	    }
-	}
+	
+    	for (int y = 0; y < heightSheetSprite; y++) {
+    		
+    		for (int x = 0; x < widthSheetSprite; x++) {
+    			final int pointX = x * widthSprite;
+				final int pointY = y * heightSprite;
+    			
+				sprites[x + y * widthSheetSprite] = new Sprite(image.getSubimage(pointX, pointY, widthSprite, heightSprite));
+    		}
+    	}
     }
 	
 }
