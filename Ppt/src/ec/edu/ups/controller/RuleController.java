@@ -57,27 +57,35 @@ public class RuleController {
 			return null;
 		} else if (optionPlayer1 == 100 && optionPlayer2 != 100) {
 			// PLAYER1 no escogio una opcion a tiempo
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 != 100 && optionPlayer2 == 100) {
 			// PLAYER2 no escogio una opcion a tiempo
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 0 && optionPlayer2 == 1) {
 			// piedra vs papel
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 0 && optionPlayer2 == 2) {
 			// piedra vs tijera
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 1 && optionPlayer2 == 0) {
 			// papel vs piedra
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 1 && optionPlayer2 == 2) {
 			// papel vs tijera
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 2 && optionPlayer2 == 0) {
 			// tijera vs piedra
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 2 && optionPlayer2 == 1) {
 			// tijera vs papel
+			player1.addWin();
 			winner = player1;
 		} else {
 			winner = null;

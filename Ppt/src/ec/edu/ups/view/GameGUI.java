@@ -24,16 +24,16 @@ public class GameGUI {
 	private void stadium() {
 
 		// Base
-		Drawn.drawFilledRectangle(g, 0, 0, Constants.WIDTH_WINDOW, Constants.HEIGHT_WINDOW, Color.CYAN);
+		Drawn.drawFilledRectangle(g, 0, 0, Constants.WIDTH_WINDOW, Constants.HEIGHT_WINDOW, new Color(59, 6, 44));
 
 		// Figuras Complementarias
 		// Centro
-		Drawn.drawFilledCircle(g, Constants.MID_WIDTH_WIN - 8, Constants.MID_HEIGHT_WIN - 8, 16, 16, Color.BLACK);
-		Drawn.drawLine(g, Constants.MID_WIDTH_WIN, 0, Constants.MID_WIDTH_WIN, Constants.HEIGHT_WINDOW, Color.BLACK);
-		Drawn.drawCircumference(g, Constants.MID_WIDTH_WIN - 64, Constants.MID_HEIGHT_WIN - 64, 128, 128, Color.BLACK);
+		Drawn.drawFilledCircle(g, Constants.MID_WIDTH_WIN - 8, Constants.MID_HEIGHT_WIN - 8, 16, 16, Color.white);
+		Drawn.drawLine(g, Constants.MID_WIDTH_WIN, 0, Constants.MID_WIDTH_WIN, Constants.HEIGHT_WINDOW, Color.white);
+		Drawn.drawCircumference(g, Constants.MID_WIDTH_WIN - 64, Constants.MID_HEIGHT_WIN - 64, 128, 128, Color.white);
 		// Marcadores
-		Drawn.drawPerimeterRectangle(g, Constants.MID_WIDTH_WIN - 30, 0, 30, 30, Color.BLACK);
-		Drawn.drawPerimeterRectangle(g, Constants.MID_WIDTH_WIN, 0, 30, 30, Color.BLACK);
+		Drawn.drawPerimeterRectangle(g, Constants.MID_WIDTH_WIN - 30, 0, 30, 30, Color.white);
+		Drawn.drawPerimeterRectangle(g, Constants.MID_WIDTH_WIN, 0, 30, 30, Color.white);
 
 		// Dibujar textos
 		// Marcadores
