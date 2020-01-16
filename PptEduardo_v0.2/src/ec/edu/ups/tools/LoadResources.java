@@ -16,89 +16,86 @@ import javax.imageio.ImageIO;
 public class LoadResources {
 
     public static BufferedImage loadOpaqueImage(final String path) {
-	Image image = null;
+    	Image image = null;
+    	
+    	try {
+    		image = ImageIO.read(ClassLoader.class.getResource(path));
+    	} catch (IOException ex) {
+    		ex.printStackTrace();
+    	}
 
-	try {
-	    image = ImageIO.read(ClassLoader.class.getResource(path));
+    	GraphicsConfiguration graphConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+    										.getDefaultConfiguration();
 
-	} catch (IOException ex) {
-	    ex.printStackTrace();
-	}
-
-	GraphicsConfiguration graphConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-		.getDefaultConfiguration();
-
-	BufferedImage buffImage = graphConfig.createCompatibleImage(image.getWidth(null), image.getHeight(null),
-		Transparency.OPAQUE);
-	Graphics g = buffImage.getGraphics();
-
-	g.drawImage(image, 0, 0, null);
-
-	g.dispose();
-
-	return buffImage;
-
+    	BufferedImage buffImage = graphConfig.createCompatibleImage(image.getWidth(null), image.getHeight(null),
+    								Transparency.OPAQUE);
+	
+    	Graphics g = buffImage.getGraphics();
+	  	g.drawImage(image, 0, 0, null);
+    	g.dispose();
+    	
+    	return buffImage;
     }
 
     public static BufferedImage loadTranslucentImage(final String path) {
+    	Image image = null;
 
-	Image image = null;
+	
+    	try {
+    		image = ImageIO.read(ClassLoader.class.getResource(path));	
+    	} catch (Exception ex) {
+	    	System.out.println("ENTRAAA error\n" + ex.toString());
+	   	}
 
-	try {
-	    image = ImageIO.read(ClassLoader.class.getResource(path));
+    	GraphicsConfiguration graphConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+    										.getDefaultConfiguration();
 
-	} catch (Exception ex) {
-	    System.out.println("ENTRAAA error\n" + ex.toString());
-	}
+	
+    	BufferedImage buffImage = graphConfig.createCompatibleImage(image.getWidth(null), image.getHeight(null),
+    								Transparency.TRANSLUCENT);
+	
+    	Graphics g = buffImage.getGraphics();
+    	g.drawImage(image, 0, 0, null);
+    	g.dispose();
 
-	GraphicsConfiguration graphConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-		.getDefaultConfiguration();
-
-	BufferedImage buffImage = graphConfig.createCompatibleImage(image.getWidth(null), image.getHeight(null),
-		Transparency.TRANSLUCENT);
-	Graphics g = buffImage.getGraphics();
-
-	g.drawImage(image, 0, 0, null);
-
-	g.dispose();
-
-	return buffImage;
-
+    	return buffImage;
     }
 
     public static String readTextFile(final String path) {
+    	String content = "";
 
-	String content = "";
+    	InputStream stream = ClassLoader.class.getResourceAsStream(path);
+    	BufferedReader read = new BufferedReader(new InputStreamReader(stream));
 
-	InputStream stream = ClassLoader.class.getResourceAsStream(path);
+	   	String line;
+	
+    	try {
+    		
+			while ((line = read.readLine()) != null) {
+				content += line;
+		    }
+		
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	} finally {
+	    
+    		try {
+		
+    			if (stream != null) {
+    				stream.close();
+				}
 
-	BufferedReader read = new BufferedReader(new InputStreamReader(stream));
+				if (read != null) {
+					read.close();
+				}
+				
+    		} catch (IOException ex) {
+	    		ex.printStackTrace();
+    		}
+    		
+    	}
 
-	String line;
-
-	try {
-	    while ((line = read.readLine()) != null) {
-		content += line;
-	    }
-	} catch (IOException e) {
-	    e.printStackTrace();
-	} finally {
-
-	    try {
-		if (stream != null) {
-		    stream.close();
-		}
-
-		if (read != null) {
-		    read.close();
-		}
-	    } catch (IOException ex) {
-		ex.printStackTrace();
-	    }
-	}
-
-	return content;
-
+    	return content;
     }
 
 }
