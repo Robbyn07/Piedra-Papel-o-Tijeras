@@ -10,13 +10,10 @@ public class RuleController {
 	private Player winner;
 
 	/*
-	 * Identificacion para los elementos del jugador:
-	 * 100 	= no selecciona ninguna opcion.
-	 * 0 	= selecciona piedra.
-	 * 1	= selecciona papel.
-	 * 2	= selecciona tijeras.
- 	 */
-	
+	 * Identificacion para los elementos del jugador: 100 = no selecciona ninguna
+	 * opcion. 0 = selecciona piedra. 1 = selecciona papel. 2 = selecciona tijeras.
+	 */
+
 	private int p1 = 100;
 	private int p2 = 100;
 
@@ -43,13 +40,13 @@ public class RuleController {
 	}
 
 	public Player winner() {
-		
+
 		/*
-		 * Aparte, cuando se decida quien gano, en proximas actualizaciones,
-		 * aumentar en uno el total de victorias de un jugador...
-		 * y restar el total de derrotas del otro jugador? 
+		 * Aparte, cuando se decida quien gano, en proximas actualizaciones, aumentar en
+		 * uno el total de victorias de un jugador... y restar el total de derrotas del
+		 * otro jugador?
 		 */
-		
+
 		int optionPlayer1 = option(player1);
 		int optionPlayer2 = option(player2);
 
@@ -89,23 +86,22 @@ public class RuleController {
 	}
 
 	/**
-	 * Metodo para saber que opcion se escogio, sirve especialmente 
-	 * si se da el caso de que no se escoge ninguna opcion, entonces 
-	 * devuelve un valor nulo.
+	 * Metodo para saber que opcion se escogio, sirve especialmente si se da el caso
+	 * de que no se escoge ninguna opcion, entonces devuelve un valor nulo.
 	 */
 	private int option(Player player) {
 		int option = 100;
 		int n = player.getElements().length;
-		
+
 		for (int i = 0; i < n; i++) {
-			
+
 			if (player.getElements()[i].isSelected() == true) {
 				option = i;
 				break;
 			}
-			
+
 		}
-		
+
 		return option;
 	}
 

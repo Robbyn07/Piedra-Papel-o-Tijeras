@@ -8,7 +8,7 @@ import ec.edu.ups.controller.statemachine.GameState;
 import ec.edu.ups.controller.statemachine.StateManager;
 import ec.edu.ups.model.Element;
 import ec.edu.ups.model.Player;
-
+import ec.edu.ups.view.GameGUI;
 
 public class GameRuleManager implements GameState {
 
@@ -23,8 +23,8 @@ public class GameRuleManager implements GameState {
 	private Player winner;
 
 	private RuleController ruleController;
+	private GameGUI gameGui;
 
-	
 	public GameRuleManager() {
 		Element[] e1 = new Element[3];
 		Element[] e2 = new Element[3];
@@ -40,10 +40,10 @@ public class GameRuleManager implements GameState {
 		player1 = new Player("Roby", e1);
 		player2 = new Player("Edd", e2);
 		ruleController = new RuleController(player1, player2);
+		gameGui = new GameGUI();
 		startState();
 	}
 
-	
 	public void startState() {
 		startTime = System.nanoTime();
 		second = 5;
@@ -55,7 +55,7 @@ public class GameRuleManager implements GameState {
 	public void update(StateManager stateManager) {
 		ruleController.updateKeyboard();
 		estimatedTime += (System.nanoTime() - startTime) / 1000000000;
-		
+
 		if (estimatedTime >= 1 && status) {
 			System.out.println("T" + second);
 			second--;
@@ -65,7 +65,7 @@ public class GameRuleManager implements GameState {
 				ruleController.setOption(player1, ruleController.getP1());
 				ruleController.setOption(player2, ruleController.getP2());
 				winner = ruleController.winner();
-				
+
 				if (winner == null) {
 					System.out.println("Empate 0+");
 					startState();
@@ -73,7 +73,7 @@ public class GameRuleManager implements GameState {
 					System.out.println("Gano: " + winner.getName());
 					stateManager.changeState(1);
 				}
-				
+
 				ruleController.setWinner(null);
 			}
 			estimatedTime = 0;
@@ -83,7 +83,7 @@ public class GameRuleManager implements GameState {
 
 	@Override
 	public void print(Graphics g) {
-
+		this.gameGui.startPaint(g);
 	}
 
 }
