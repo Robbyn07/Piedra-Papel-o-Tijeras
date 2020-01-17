@@ -32,6 +32,9 @@ public class RuleController {
 	}
 
 	public Player getWinner() {
+		winner = winner();
+		this.p1 = 100;
+		this.p2 = 100;
 		return winner;
 	}
 
@@ -39,7 +42,7 @@ public class RuleController {
 		this.winner = winner;
 	}
 
-	public Player winner() {
+	private Player winner() {
 
 		/*
 		 * Aparte, cuando se decida quien gano, en proximas actualizaciones, aumentar en
@@ -49,35 +52,43 @@ public class RuleController {
 
 		int optionPlayer1 = option(player1);
 		int optionPlayer2 = option(player2);
-
-		System.out.println("Comprobando...");
+		winner = null;
+		System.out.println("Comprobando..." + optionPlayer1 + " | " + optionPlayer2);
 
 		if (optionPlayer1 == optionPlayer2) {
 			// EMPATE
 			return null;
 		} else if (optionPlayer1 == 100 && optionPlayer2 != 100) {
 			// PLAYER1 no escogio una opcion a tiempo
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 != 100 && optionPlayer2 == 100) {
 			// PLAYER2 no escogio una opcion a tiempo
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 0 && optionPlayer2 == 1) {
 			// piedra vs papel
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 0 && optionPlayer2 == 2) {
 			// piedra vs tijera
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 1 && optionPlayer2 == 0) {
 			// papel vs piedra
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 1 && optionPlayer2 == 2) {
 			// papel vs tijera
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 2 && optionPlayer2 == 0) {
 			// tijera vs piedra
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 2 && optionPlayer2 == 1) {
 			// tijera vs papel
+			player1.addWin();
 			winner = player1;
 		} else {
 			winner = null;
@@ -97,6 +108,7 @@ public class RuleController {
 
 			if (player.getElements()[i].isSelected() == true) {
 				option = i;
+				player.getElements()[i].setSelected(false);
 				break;
 			}
 

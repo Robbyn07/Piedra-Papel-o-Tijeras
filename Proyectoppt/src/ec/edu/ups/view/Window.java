@@ -19,7 +19,7 @@ public class Window extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setSize(width, height);
-		// setResizable(false);
+//		setResizable(false);
 		// setIconImage(image);
 		setLayout(new BorderLayout());
 		add(game, BorderLayout.CENTER);
@@ -29,7 +29,7 @@ public class Window extends JFrame {
 
 		setLocationRelativeTo(null);
 
-		// pack();
+		pack();
 
 	}
 
