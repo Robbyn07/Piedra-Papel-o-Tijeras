@@ -20,11 +20,9 @@ public class StateManager {
 	}
 
 	private void createStates() {
-
 		states = new GameState[2];
-		states[0] = new GameRuleManager();
+		states[0] = new GameRuleManager(2, "Roby", "Edd");
 		states[1] = new GameWinnerManager();
-
 	}
 
 	private void createCurrentState() {
@@ -36,7 +34,7 @@ public class StateManager {
 	}
 
 	public void print(final Graphics g) {
-		currentState.print(g);
+		currentState.paint(g);
 	}
 
 	public void changeState(int newState) {

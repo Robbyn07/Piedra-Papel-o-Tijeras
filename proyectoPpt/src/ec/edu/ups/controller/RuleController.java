@@ -9,9 +9,9 @@ public class RuleController {
 	private Player player2;
 	private Player winner;
 
-	/**
-	 * Identificacion para los elementos del jugador. 100 no selecciona ninguna
-	 * opcion 0 selecciona piedra 1 selecciona papel 2 selecciona tijeras
+	/*
+	 * Identificacion para los elementos del jugador: 100 = no selecciona ninguna
+	 * opcion. 0 = selecciona piedra. 1 = selecciona papel. 2 = selecciona tijeras.
 	 */
 
 	private int p1 = 100;
@@ -32,6 +32,9 @@ public class RuleController {
 	}
 
 	public Player getWinner() {
+		winner = winner();
+		this.p1 = 100;
+		this.p2 = 100;
 		return winner;
 	}
 
@@ -39,45 +42,53 @@ public class RuleController {
 		this.winner = winner;
 	}
 
-	public Player winner() {
+	private Player winner() {
 
-		/**
-		 * aparte, cuando se decida quien gano, en proximas actualizaciones, aumentar en
-		 * uno el total de victorias del un jugador y restar el total de derrotas del
+		/*
+		 * Aparte, cuando se decida quien gano, en proximas actualizaciones, aumentar en
+		 * uno el total de victorias de un jugador... y restar el total de derrotas del
 		 * otro jugador?
 		 */
 
 		int optionPlayer1 = option(player1);
 		int optionPlayer2 = option(player2);
-
-		System.out.println("Comprobando...");
+		winner = null;
+		System.out.println("Comprobando..." + optionPlayer1 + " | " + optionPlayer2);
 
 		if (optionPlayer1 == optionPlayer2) {
 			// EMPATE
 			return null;
 		} else if (optionPlayer1 == 100 && optionPlayer2 != 100) {
 			// PLAYER1 no escogio una opcion a tiempo
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 != 100 && optionPlayer2 == 100) {
 			// PLAYER2 no escogio una opcion a tiempo
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 0 && optionPlayer2 == 1) {
 			// piedra vs papel
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 0 && optionPlayer2 == 2) {
 			// piedra vs tijera
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 1 && optionPlayer2 == 0) {
 			// papel vs piedra
+			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 1 && optionPlayer2 == 2) {
 			// papel vs tijera
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 2 && optionPlayer2 == 0) {
 			// tijera vs piedra
+			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 2 && optionPlayer2 == 1) {
 			// tijera vs papel
+			player1.addWin();
 			winner = player1;
 		} else {
 			winner = null;
@@ -86,18 +97,23 @@ public class RuleController {
 	}
 
 	/**
-	 * metodo para saber que opcion se escogio, sirve especialmente si se da el caso
+	 * Metodo para saber que opcion se escogio, sirve especialmente si se da el caso
 	 * de que no se escoge ninguna opcion, entonces devuelve un valor nulo.
 	 */
 	private int option(Player player) {
 		int option = 100;
 		int n = player.getElements().length;
+
 		for (int i = 0; i < n; i++) {
+
 			if (player.getElements()[i].isSelected() == true) {
 				option = i;
+				player.getElements()[i].setSelected(false);
 				break;
 			}
+
 		}
+
 		return option;
 	}
 
@@ -139,7 +155,6 @@ public class RuleController {
 		if (ControlManager.keyboard.isScissors2()) {
 			p2 = 2;
 		}
-
 	}
 
 }

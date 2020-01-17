@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import ec.edu.ups.controller.statemachine.GameState;
 import ec.edu.ups.controller.statemachine.StateManager;
 
+
 public class GameWinnerManager implements GameState {
 
 	@Override
@@ -14,7 +15,7 @@ public class GameWinnerManager implements GameState {
 	}
 
 	@Override
-	public void print(Graphics g) {
+	public void paint(Graphics g) {
 		// TODO Auto-generated method stub
 
 	}
