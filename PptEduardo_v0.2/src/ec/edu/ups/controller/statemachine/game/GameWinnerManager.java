@@ -15,7 +15,7 @@ public class GameWinnerManager implements GameState {
 	}
 
 	@Override
-	public void print(Graphics g) {
+	public void paint(Graphics g) {
 		// TODO Auto-generated method stub
 
 	}

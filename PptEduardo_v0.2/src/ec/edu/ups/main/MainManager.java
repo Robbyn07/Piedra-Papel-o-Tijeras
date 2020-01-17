@@ -58,10 +58,9 @@ public class MainManager {
 				update();
 				ups++;
 				delta--;
+				print();
+				fps++;
 			}
-
-			print();
-			fps++;
 
 			if (System.nanoTime() - countReference > NS_PER_SECOND) {
 				// setTitle(title + " | UPS: " + ups + " | FPS: " + fps);

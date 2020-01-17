@@ -74,7 +74,7 @@ public class Element implements GameState {
 	}
 
 	@Override
-	public void print(Graphics g) {
+	public void paint(Graphics g) {
 		g.drawImage(getImage(), pointX, pointY, null);
 		g.dispose();
 	}

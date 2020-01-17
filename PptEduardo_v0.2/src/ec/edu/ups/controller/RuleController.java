@@ -32,6 +32,9 @@ public class RuleController {
 	}
 
 	public Player getWinner() {
+		winner = winner();
+		this.p1 = 100;
+		this.p2 = 100;
 		return winner;
 	}
 
@@ -39,7 +42,7 @@ public class RuleController {
 		this.winner = winner;
 	}
 
-	public Player winner() {
+	private Player winner() {
 
 		/*
 		 * Aparte, cuando se decida quien gano, en proximas actualizaciones, aumentar en
@@ -49,8 +52,8 @@ public class RuleController {
 
 		int optionPlayer1 = option(player1);
 		int optionPlayer2 = option(player2);
-
-		System.out.println("Comprobando...");
+		winner = null;
+		System.out.println("Comprobando..." + optionPlayer1 + " | " + optionPlayer2);
 
 		if (optionPlayer1 == optionPlayer2) {
 			// EMPATE
@@ -105,6 +108,7 @@ public class RuleController {
 
 			if (player.getElements()[i].isSelected() == true) {
 				option = i;
+				player.getElements()[i].setSelected(false);
 				break;
 			}
 
