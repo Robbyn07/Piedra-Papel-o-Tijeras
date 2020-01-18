@@ -30,15 +30,19 @@ public class GameRuleManager implements GameState {
 	private GameGUI gameGui;
 
 	// Temporal
-	private SpriteSheet spriteSheetR;
-	private SpriteSheet spriteSheetP;
-	private SpriteSheet spriteSheetS;
+	// private SpriteSheet spriteSheetR;
+	// private SpriteSheet spriteSheetP;
+	// private SpriteSheet spriteSheetS;
+	private SpriteSheet spriteSheetE;
+	private SpriteSheet spriteSheetInv;
 
 	public GameRuleManager(int roundNumber, String player1, String player2) {
 		// Temporal
-		this.spriteSheetR = new SpriteSheet(Constants.ROCK_PATH, 64, false);
-		this.spriteSheetP = new SpriteSheet(Constants.PAPER_PATH, 64, false);
-		this.spriteSheetS = new SpriteSheet(Constants.SCISSORS_PATH, 64, false);
+		// this.spriteSheetR = new SpriteSheet(Constants.ROCK_PATH, 64, false);
+		// this.spriteSheetP = new SpriteSheet(Constants.PAPER_PATH, 64, false);
+		// this.spriteSheetS = new SpriteSheet(Constants.SCISSORS_PATH, 64, false);
+		this.spriteSheetE = new SpriteSheet(Constants.ELEMENTS_PATH, 128, false);
+		this.spriteSheetInv = new SpriteSheet(Constants.ELEMENTS_INV_PATH, 128, false);
 
 		// Fin Temporal\
 
@@ -156,14 +160,17 @@ public class GameRuleManager implements GameState {
 		int yR = midMidH - 128 - 64;
 
 		int xP = midMidW - 64 - 64;
-		int yP = midMidH - 64;
+		int yP = midMidH - 40;
 
 		int xS = midMidW;
 		int yS = midMidH + 64;
 
-		BufferedImage imageR = this.spriteSheetR.getSprites(0).getImage();
-		BufferedImage imageP = this.spriteSheetP.getSprites(0).getImage();
-		BufferedImage imageS = this.spriteSheetS.getSprites(0).getImage();
+		// BufferedImage imageR = this.spriteSheetR.getSprites(0).getImage();
+		// BufferedImage imageP = this.spriteSheetP.getSprites(0).getImage();
+		// BufferedImage imageS = this.spriteSheetS.getSprites(0).getImage();
+		BufferedImage imageR = this.spriteSheetE.getSprites(0, 1).getImage();
+		BufferedImage imageP = this.spriteSheetE.getSprites(1, 0).getImage();
+		BufferedImage imageS = this.spriteSheetE.getSprites(0).getImage();
 
 		elements[0] = new Element(xR, yR, imageR, false, 'R');
 		elements[1] = new Element(xP, yP, imageP, false, 'P');
@@ -176,21 +183,24 @@ public class GameRuleManager implements GameState {
 
 		Element[] elements = new Element[3];
 
-		int midMidW = Constants.MID_WIDTH_WIN + (Constants.MID_WIDTH_WIN / 2) - 64;
+		int midMidW = Constants.MID_WIDTH_WIN + (Constants.MID_WIDTH_WIN / 2) - 128;
 		int midMidH = Constants.MID_HEIGHT_WIN;
 
 		int xR = midMidW;
 		int yR = midMidH - 128 - 64;
 
-		int xP = midMidW + 64 + 64;
-		int yP = midMidH - 64;
+		int xP = midMidW + 128;
+		int yP = midMidH - 40;
 
 		int xS = midMidW;
 		int yS = midMidH + 64;
 
-		BufferedImage imageR = this.spriteSheetR.getSprites(0).getImage();
-		BufferedImage imageP = this.spriteSheetP.getSprites(0).getImage();
-		BufferedImage imageS = this.spriteSheetS.getSprites(0).getImage();
+		// BufferedImage imageR = this.spriteSheetE.getSprites(0).getImage();
+		// BufferedImage imageP = this.spriteSheetE.getSprites(0).getImage();
+		// BufferedImage imageS = this.spriteSheetE.getSprites(0).getImage();
+		BufferedImage imageR = this.spriteSheetInv.getSprites(1, 1).getImage();
+		BufferedImage imageP = this.spriteSheetInv.getSprites(0).getImage();
+		BufferedImage imageS = this.spriteSheetInv.getSprites(1, 0).getImage();
 
 		elements[0] = new Element(xR, yR, imageR, false, 'R');
 		elements[1] = new Element(xP, yP, imageP, false, 'P');

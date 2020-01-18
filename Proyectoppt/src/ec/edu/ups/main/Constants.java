@@ -17,8 +17,11 @@ public class Constants {
 	public static double SCALED_X = (double) FULL_WIDTH_WINDOW / (double) WIDTH_WINDOW;
 	public static double SCALED_Y = (double) FULL_HEIGHT_WINDOW / (double) HEIGHT_WINDOW;
 
-	public static String ROCK_PATH = "/ec/edu/ups/resources/textures/rock.png";
-	public static String PAPER_PATH = "/ec/edu/ups/resources/textures/paper.png";
-	public static String SCISSORS_PATH = "/ec/edu/ups/resources/textures/scissors.png";
+	// public static String ROCK_PATH = "/ec/edu/ups/resources/textures/rock.png";
+	// public static String PAPER_PATH = "/ec/edu/ups/resources/textures/paper.png";
+	// public static String SCISSORS_PATH =
+	// "/ec/edu/ups/resources/textures/scissors.png";
+	public static String ELEMENTS_PATH = "/ec/edu/ups/resources/textures/elements_sheets.png";
+	public static String ELEMENTS_INV_PATH = "/ec/edu/ups/resources/textures/elements_inv_sheet.png";
 
 }
