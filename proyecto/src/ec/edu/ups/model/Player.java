@@ -35,8 +35,11 @@ public class Player {
 		return win;
 	}
 
-	public void setWin() {
+	public void addWin() {
 		this.win++;
 	}
 
+	public void setWin(int win) {
+		this.win = win;
+	}
 }
