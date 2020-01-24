@@ -3,7 +3,6 @@ package ec.edu.ups.view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
 import ec.edu.ups.controller.statemachine.game.GameRuleManager;
 import ec.edu.ups.main.Constants;
@@ -94,17 +93,10 @@ public class GameGUI {
 
 		int n = players.length;
 		int nE;
-		BufferedImage image;
-		int xE;
-		int yE;
 
 		for (int i = 0; i < n; i++) {
 			nE = players[i].getElements().length;
 			for (int j = 0; j < nE; j++) {
-				image = players[i].getElements()[j].getImage();
-				xE = players[i].getElements()[j].getPointX();
-				yE = players[i].getElements()[j].getPointY();
-				g.drawImage(image, xE, yE, null);
 				players[i].getElements()[j].paint(g);
 			}
 
@@ -135,10 +127,10 @@ public class GameGUI {
 			Drawn.drawString(g, "Tiempo " + 0, 20, 20, Color.white);
 		}
 
-		if (data[2] > gameRuleManager.getRoundNumber()) {
+		if (data[2] >= gameRuleManager.getRoundNumber()) {
 			Drawn.drawString(g, "Fin!!", mw - 15, h - 10, Color.black);
 		} else {
-			Drawn.drawString(g, "Ronda " + data[2], mw - 30, h - 10, Color.black);
+			Drawn.drawString(g, "Ronda " + (data[2] + 1), mw - 30, h - 10, Color.black);
 		}
 
 	}

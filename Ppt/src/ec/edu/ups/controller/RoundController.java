@@ -97,7 +97,7 @@ public class RoundController {
 	public void gameData() {
 		winsP1 = player1.getWin();
 		winsP2 = player2.getWin();
-		round = winsP1 + winsP2 + 1;
+		round = winsP1 + winsP2;
 		data[0] = winsP1;
 		data[1] = winsP2;
 		data[2] = round;
@@ -146,6 +146,8 @@ public class RoundController {
 		gameData();
 		ruleController.setOption(100);
 		ruleController.setWinner(null);
+		ruleController.setFalseElements();
+		ruleController.setVelocity(0);
 	}
 
 }
