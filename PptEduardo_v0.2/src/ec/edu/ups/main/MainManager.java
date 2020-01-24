@@ -34,7 +34,7 @@ public class MainManager {
 		int ups = 0;
 
 		final int NS_PER_SECOND = 1000000000;
-		final byte UPS_OBJECT = 60;
+		final byte UPS_OBJECT = 30;
 		final double NS_PER_UPDATES = NS_PER_SECOND / UPS_OBJECT;
 
 		long updateReference = System.nanoTime();
@@ -58,12 +58,14 @@ public class MainManager {
 				update();
 				ups++;
 				delta--;
+
 				print();
 				fps++;
+
 			}
 
 			if (System.nanoTime() - countReference > NS_PER_SECOND) {
-				// setTitle(title + " | UPS: " + ups + " | FPS: " + fps);
+//				System.out.println(title + " | UPS: " + ups + " | FPS: " + fps);
 				ups = 0;
 				fps = 0;
 				countReference = System.nanoTime();
