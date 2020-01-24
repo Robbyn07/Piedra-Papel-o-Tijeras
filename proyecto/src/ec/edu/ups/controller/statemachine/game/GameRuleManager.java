@@ -10,6 +10,7 @@ import ec.edu.ups.controller.statemachine.StateManager;
 import ec.edu.ups.main.Constants;
 import ec.edu.ups.model.Element;
 import ec.edu.ups.model.Player;
+import ec.edu.ups.tools.ElementAnimation;
 import ec.edu.ups.view.GameGUI;
 import ec.edu.ups.view.graphics.SpriteSheet;
 
@@ -25,9 +26,12 @@ public class GameRuleManager implements GameState {
 
 	private Player[] players;
 	private Player winner;
+	private ElementAnimation elementAni;
 
 	private RoundController roundController;
 	private GameGUI gameGui;
+
+	private boolean winning;
 
 	// Temporal
 	// private SpriteSheet spriteSheetR;
@@ -55,7 +59,10 @@ public class GameRuleManager implements GameState {
 
 		roundController = new RoundController(this.players[0], this.players[1]);
 		gameGui = new GameGUI(this);
+
+		this.elementAni = new ElementAnimation(players, this);
 		startState();
+
 	}
 
 	public long getSecond() {
@@ -90,8 +97,17 @@ public class GameRuleManager implements GameState {
 		this.winner = winner;
 	}
 
+	public boolean isWinning() {
+		return winning;
+	}
+
+	public void setWinning(boolean winning) {
+		this.winning = winning;
+	}
+
 	public void startState() {
 		status = true;
+		winning = false;
 		startRound();
 	}
 
@@ -101,14 +117,17 @@ public class GameRuleManager implements GameState {
 		estimatedTime = 0;
 		startTime = System.nanoTime();
 		paintFaces(0);
+		winning = false;
+		elementAni.startPresentation(20);
 	}
 
 	@Override
 	public void update(StateManager stateManager) {
 		roundController.update();
+		elementAni.update(second);
 		estimatedTime += (System.nanoTime() - startTime) / 1000000000;
 
-		if (roundNumber >= roundController.getData()[2] && status) {
+		if (status) {
 			if (estimatedTime >= 1) {
 				second--;
 
@@ -118,7 +137,6 @@ public class GameRuleManager implements GameState {
 				startTime = System.nanoTime();
 			}
 		} else {
-			status = false;
 			stateManager.changeState(1);
 		}
 
@@ -135,6 +153,8 @@ public class GameRuleManager implements GameState {
 		int op2;
 
 		if (second == 0) {
+
+			elementAni.stopPresentation();
 			roundController.selectOption();
 
 			op1 = roundController.getRuleController().getP1();
@@ -142,13 +162,14 @@ public class GameRuleManager implements GameState {
 
 			winner = roundController.getRoundWinner();
 
+			elementAni.startAtackAnimation(20);
+
 			if (winner != null) {
 				roundController.finishedRound();
-				System.out.println("W: " + winner.getName() + "selec: " + roundController.getOption());
+				System.out.println("W: " + winner.getName() + " | selected: " + roundController.getOption());
 			}
 
 			gameGui.setWinner(winner);
-			gameGui.setRoundFinishState(true);
 
 			if (winner == null) {
 				paintFaces(8);
@@ -167,10 +188,20 @@ public class GameRuleManager implements GameState {
 
 		}
 
-		if (second <= -3) {
-			gameGui.setWinner(null);
-			gameGui.setRoundFinishState(false);
-			startRound();
+		if (winning) {
+
+			gameGui.setRoundFinishState(true);
+			if (second == -3) {
+
+				if (roundNumber <= roundController.getData()[2]) {
+					status = false;
+
+				}
+
+				gameGui.setWinner(null);
+				gameGui.setRoundFinishState(false);
+				startRound();
+			}
 		}
 	}
 
@@ -190,16 +221,22 @@ public class GameRuleManager implements GameState {
 		int xS = midMidW;
 		int yS = midMidH + 64;
 
-		// BufferedImage imageR = this.spriteSheetR.getSprites(0).getImage();
-		// BufferedImage imageP = this.spriteSheetP.getSprites(0).getImage();
-		// BufferedImage imageS = this.spriteSheetS.getSprites(0).getImage();
+		int xFR = 32;
+		int yFR = 32;
+
+		int xFP = 5;
+		int yFP = 20;
+
+		int xFS = 33;
+		int yFS = 27;
+
 		BufferedImage imageR = this.sSElements.getSprites(0, 1).getImage();
 		BufferedImage imageP = this.sSElements.getSprites(1, 0).getImage();
 		BufferedImage imageS = this.sSElements.getSprites(0).getImage();
 
-		elements[0] = new Element(xR, yR, imageR, false, 'R', Constants.FACES_PATH, 64, 9, xR + 32, yR + 32);
-		elements[1] = new Element(xP, yP, imageP, false, 'P', Constants.FACES_PATH, 64, 9, xP + 5, yP + 20);
-		elements[2] = new Element(xS, yS, imageS, false, 'S', Constants.FACES_PATH, 64, 9, xS + 33, yS + 27);
+		elements[0] = new Element(xR, yR, imageR, false, 'R', Constants.FACES_PATH, 64, 9, xFR, yFR);
+		elements[1] = new Element(xP, yP, imageP, false, 'P', Constants.FACES_PATH, 64, 9, xFP, yFP);
+		elements[2] = new Element(xS, yS, imageS, false, 'S', Constants.FACES_PATH, 64, 9, xFS, yFS);
 		return elements;
 
 	}
@@ -220,6 +257,15 @@ public class GameRuleManager implements GameState {
 		int xS = midMidW;
 		int yS = midMidH + 64;
 
+		int xFR = +32;
+		int yFR = +32;
+
+		int xFP = +60;
+		int yFP = +20;
+
+		int xFS = +32;
+		int yFS = +27;
+
 		// BufferedImage imageR = this.spriteSheetE.getSprites(0).getImage();
 		// BufferedImage imageP = this.spriteSheetE.getSprites(0).getImage();
 		// BufferedImage imageS = this.spriteSheetE.getSprites(0).getImage();
@@ -227,9 +273,9 @@ public class GameRuleManager implements GameState {
 		BufferedImage imageP = this.sSElementsInv.getSprites(0).getImage();
 		BufferedImage imageS = this.sSElementsInv.getSprites(1, 0).getImage();
 
-		elements[0] = new Element(xR, yR, imageR, false, 'R', Constants.FACES_PATH, 64, 9, xR + 32, yR + 32);
-		elements[1] = new Element(xP, yP, imageP, false, 'P', Constants.FACES_PATH, 64, 9, xP + 60, yP + 20);
-		elements[2] = new Element(xS, yS, imageS, false, 'S', Constants.FACES_PATH, 64, 9, xS + 32, yS + 27);
+		elements[0] = new Element(xR, yR, imageR, false, 'R', Constants.FACES_PATH, 64, 9, xFR, yFR);
+		elements[1] = new Element(xP, yP, imageP, false, 'P', Constants.FACES_PATH, 64, 9, xFP, yFP);
+		elements[2] = new Element(xS, yS, imageS, false, 'S', Constants.FACES_PATH, 64, 9, xFS, yFS);
 		return elements;
 
 	}
@@ -259,6 +305,11 @@ public class GameRuleManager implements GameState {
 			break;
 		default:
 		}
+	}
+
+	public boolean collisionElements() {
+
+		return false;
 	}
 
 }
