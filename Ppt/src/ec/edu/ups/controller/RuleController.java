@@ -8,6 +8,7 @@ public class RuleController {
 	private Player player1;
 	private Player player2;
 	private Player winner;
+	private int elementWinner;
 
 	/*
 	 * Identificacion para los elementos del jugador: 100 = no selecciona ninguna
@@ -51,6 +52,14 @@ public class RuleController {
 		this.winner = winner;
 	}
 
+	public int getElementWinner() {
+		return elementWinner;
+	}
+
+	public void setElementWinner(int elementWinner) {
+		this.elementWinner = elementWinner;
+	}
+
 	private Player winner() {
 
 		/*
@@ -66,11 +75,18 @@ public class RuleController {
 
 		if (optionPlayer1 == optionPlayer2) {
 			// EMPATE
+			if (optionPlayer1 == 100) {
+				setElementWinner(100);
+			} else {
+				setElementWinner(optionPlayer1);
+			}
+
 			return null;
 		} else if (optionPlayer1 == 100 && optionPlayer2 != 100) {
 			// PLAYER1 no escogio una opcion a tiempo
 			player2.addWin();
 			winner = player2;
+
 		} else if (optionPlayer1 != 100 && optionPlayer2 == 100) {
 			// PLAYER2 no escogio una opcion a tiempo
 			player1.addWin();
@@ -101,7 +117,16 @@ public class RuleController {
 			winner = player1;
 		} else {
 			winner = null;
+			setElementWinner(100);
+			return winner;
 		}
+
+		if (winner == player1) {
+			setElementWinner(optionPlayer1);
+		} else {
+			setElementWinner(optionPlayer2);
+		}
+
 		return winner;
 	}
 
