@@ -9,344 +9,672 @@ import ec.edu.ups.model.Player;
 
 public class ElementAnimation {
 
-	private double G = 0.2;
+    private double G = 0.2;
 
-	private int[] xD;
-	private int[] yD;
+    private int[] xD;
+    private int[] yD;
 
-	private int[] wD;
-	private int[] hD;
+    private int[] wD;
+    private int[] hD;
 
-	private Player[] players;
-	GameRuleManager gameRuleManager;
+    private boolean running;
+    private int animaOption;
 
-	private boolean running;
+    private Player[] players;
+    GameRuleManager gameRuleManager;
 
-	private boolean[] jumping;
-	private boolean[] stateAtacking;
-	private boolean atacking;
-	private int op1;
-	private int op2;
+    /*
+     * Atributos necesarios para realizar las animaciones de ataque.
+     */
+    private boolean[] jumping;
+    private boolean[] stateMovingElement;
+    private boolean[] stateAtacking;
+    private double[] speedsX;
+    private double[] speedsY;
+    private boolean atacking;
+    /* Fin */
 
-	int NS_PER_SECOND = 1000000000;
-	int UPS_OBJECT;
-	double NS_PER_UPDATES;
+    /*
+     * Control de frecuencia.
+     */
+    int NS_PER_SECOND = 1000000000;
+    int UPS_OBJECT;
+    double NS_PER_UPDATES;
+    long updateReference;
+    long countReference;
+    double timeElapsed;
+    double delta = 0;
+    long loopStart;
+    /* Fin */
 
-	long updateReference;
-	long countReference;
+    public ElementAnimation(Player[] players, GameRuleManager gameRuleManager) {
+	super();
 
-	double timeElapsed;
-	double delta = 0;
+	this.players = players;
+	this.gameRuleManager = gameRuleManager;
 
-	long loopStart;
+	setDefaults(players);
+	this.running = false;
+	this.atacking = false;
+	this.animaOption = 0;
 
-	private int animaOption;
+	this.stateAtacking = new boolean[4];
 
-	public ElementAnimation(Player[] players, GameRuleManager gameRuleManager) {
-		super();
+	this.stateAtacking[0] = true;
+	this.stateAtacking[1] = false;
+	this.stateAtacking[2] = false;
+	this.stateAtacking[3] = false;
 
-		this.players = players;
-		this.gameRuleManager = gameRuleManager;
+    }
 
-		setDefaults(players);
-		this.running = false;
-		this.atacking = false;
-		this.animaOption = 0;
+    /*
+     * Getters y Setters.
+     */
+    public boolean isRunning() {
+	return running;
+    }
+
+    public void setRunning(boolean running) {
+	this.running = running;
+    }
+
+    public boolean isAtacking() {
+	return atacking;
+    }
+
+    public void setAtacking(boolean atacking) {
+	this.atacking = atacking;
+    }
+
+    /**
+     * Metodo update, llamado desde el controlador de estados GameRuleManager,
+     * este ejecuta la animacion que este selecionada en animaOption.
+     * animaOption = 0 para no ejecutar ninguna animacion.
+     * 
+     * @param second
+     */
+    public void update(long second) {
+	switch (animaOption) {
+
+	case 0:
+
+	    break;
+	case 1:
+	    inAnimation();
+
+	    break;
+	case 2:
+	    presentation();
+	    break;
+	case 3:
+	    atackAnimation();
+	    break;
+	default:
+	    System.out.println("Animacion no encontrada.");
+	    break;
 	}
 
-	public boolean isRunning() {
-		return running;
+    }
+
+    /**
+     * Establece a los arrays xD, yD, wD, hD extraidos de los elementos de cada
+     * jugador.
+     * 
+     * Tambien establece las velocidades de ataque por defecto para cada
+     * Element.
+     * 
+     * Tambien inicializa el array Jumping para la animacion de presentacion.
+     * 
+     * @param Array de Player, para obtener los datos de los elementos de cada
+     *              jugador.
+     */
+    public void setDefaults(Player[] players) {
+
+	int n = players[0].getElements().length * 2;
+	this.xD = new int[n];
+	this.yD = new int[n];
+	this.wD = new int[n];
+	this.hD = new int[n];
+	this.jumping = new boolean[n];
+	this.stateMovingElement = new boolean[n];
+	this.speedsX = new double[n];
+	this.speedsY = new double[n];
+	int c = 0;
+
+	int mW = Constants.MID_WIDTH_WIN;
+	int mH = Constants.MID_HEIGHT_WIN;
+
+	for (int i = 0; i < players.length; i++) {
+	    for (int j = 0; j < players[i].getElements().length; j++) {
+
+		Element element = players[i].getElements()[j];
+
+		this.xD[c] = element.getPointX();
+		this.yD[c] = element.getPointY();
+		this.wD[c] = element.getWidth();
+		this.hD[c] = element.getHeight();
+		this.jumping[c] = false;
+		this.stateMovingElement[c] = false;
+
+		double vx = Math.abs(mW - element.getEdge().getX()) / 30;
+		double vy = Math.abs(mH - element.getEdge().getY()) / 30;
+
+		speedsX[c] = vx;
+		speedsY[c] = vy;
+
+		c++;
+	    }
 	}
+    }
 
-	public void setRunning(boolean running) {
-		this.running = running;
-	}
+    /**
+     * Inicializa los atributos y metodos necesarios para realizar la animacion
+     * de Entrada.
+     * 
+     * @param velocity
+     */
+    public void startInAnimation(int velocity) {
 
-	public boolean isAtacking() {
-		return atacking;
-	}
+	NS_PER_UPDATES = NS_PER_SECOND / velocity;
+	UPS_OBJECT = velocity;
+	running = true;
+	defaultElements();
 
-	public void setAtacking(boolean atacking) {
-		this.atacking = atacking;
-	}
+	setStateMoving(true);
 
-	public void update(long second) {
-		switch (animaOption) {
-		case 1:
-			presentation();
-			break;
-		case 2:
-			atackAnimation();
-			break;
-		default:
-			break;
-		}
+	animaOption = 1;
 
-	}
+	this.players[0].getElements()[0].setPointY(-128);
+	this.players[0].getElements()[1].setPointX(-128);
+	this.players[0].getElements()[2].setPointY(Constants.HEIGHT_WINDOW);
 
-	private void atackAnimation() {
+	this.players[1].getElements()[0].setPointY(-128);
+	this.players[1].getElements()[1].setPointX(Constants.WIDTH_WINDOW);
+	this.players[1].getElements()[2].setPointY(Constants.HEIGHT_WINDOW);
 
-		if (running) {
+	updateReference = System.nanoTime();
+	countReference = System.nanoTime();
 
-			loopStart = System.nanoTime();
+    }
 
-			timeElapsed = loopStart - updateReference;
-			updateReference = loopStart;
+    /**
+     * Termina la aniamcion de Entrada.
+     */
+    public void stopInAnimation() {
 
-			delta += timeElapsed / NS_PER_UPDATES;
-			int c = 0;
-			if (delta >= 1) {
-				delta = 0;
-				for (int i = 0; i < players.length; i++) {
-					for (int j = 0; j < players[i].getElements().length; j++) {
+	this.animaOption = 0;
+	this.running = false;
 
-						Element element = players[i].getElements()[j];
+	startPresentation(20);
 
-						if (element.isSelected()) {
-							atackAnimation(element, c);
+    }
 
-						} else {
-							atackOutAnimation(element);
-						}
-						c++;
-					}
-				}
+    /**
+     * Este metodo realiza la animacion de entrada para cada elemento.
+     */
+    private void inAnimation() {
 
-			}
+	if (running) {
 
-		}
+	    loopStart = System.nanoTime();
 
-	}
+	    timeElapsed = loopStart - updateReference;
+	    updateReference = loopStart;
 
-	private void stopAtackAnimation() {
+	    delta += timeElapsed / NS_PER_UPDATES;
 
-		running = false;
-		setAtacking(false);
-		gameRuleManager.setWinning(true);
+	    if (delta >= 1) {
+		delta = 0;
 
-	}
-
-	public void setDefaults(Player[] players) {
-
-		int n = players[0].getElements().length * 2;
-		this.xD = new int[n];
-		this.yD = new int[n];
-		this.wD = new int[n];
-		this.hD = new int[n];
-		this.jumping = new boolean[n];
-		this.stateAtacking = new boolean[n];
 		int c = 0;
 
-		for (int i = 0; i < players.length; i++) {
-			for (int j = 0; j < players[i].getElements().length; j++) {
+		for (int i = 0; i < this.players.length; i++) {
 
-				Element element = players[i].getElements()[j];
+		    for (int j = 0; j < players[i].getElements().length; j++) {
 
-				this.xD[c] = element.getPointX();
-				this.yD[c] = element.getPointY();
-				this.wD[c] = element.getWidth();
-				this.hD[c] = element.getHeight();
-				this.jumping[c] = false;
-				this.stateAtacking[c] = false;
-				c++;
-			}
-		}
-	}
+			Element element = players[i].getElements()[j];
 
-	public void startPresentation(int velocity) {
+			element.setVelocityY(
+				(element.getVelocityY()) + 2 * 0.9);
+			element.setVelocityX(
+				(element.getVelocityX()) + 2 * 0.9);
 
-		NS_PER_UPDATES = NS_PER_SECOND / velocity;
-		UPS_OBJECT = velocity;
-		running = true;
-		animaOption = 1;
-		G = Math.abs(G);
-		defaultElements();
-		updateReference = System.nanoTime();
-		countReference = System.nanoTime();
-	}
+			int x = (int) element.getPointX();
+			int y = (int) element.getPointY();
 
-	public void stopPresentation() {
-		running = false;
-		animaOption = 0;
-	}
+			if (stateMovingElement[c] && element.getOption() == 'R'
+				&& y < yD[c]) {
+			    moveDown(element);
 
-	public void presentation() {
-
-		if (running) {
-
-			loopStart = System.nanoTime();
-
-			timeElapsed = loopStart - updateReference;
-			updateReference = loopStart;
-
-			delta += timeElapsed / NS_PER_UPDATES;
-
-			if (delta >= 1) {
-				delta = 0;
-				int nP = players.length;
-				int nE;
-				int c = 0;
-				Element element;
-
-				for (int i = 0; i < nP; i++) {
-					nE = players[i].getElements().length;
-
-					for (int j = 0; j < nE; j++) {
-						element = players[i].getElements()[j];
-
-						if (jumping[c]) {
-							if (G > 0) {
-								G = -G;
-							}
-						}
-
-						int jump = (int) (element.getPointY() + element.getVelocityY());
-
-						element.setVelocityY(element.getVelocityY() + G);
-
-//						element.setVelocityY(element.getVelocityY() * 0.9); // Friccion
-
-						if (jump <= (yD[c] - 2)) {
-							jumping[c] = false;
-							G = Math.abs(G);
-						} else {
-							element.setPointY(jump);
-						}
-
-						if (jump >= (yD[c] + 2)) {
-							element.setPointY(yD[c] + 2);
-							jumping[c] = true;
-						} else {
-							element.setPointY(jump);
-						}
-						c++;
-					}
-
-				}
 			}
 
-		}
-
-	}
-
-	public void startAtackAnimation(int velocity) {
-		running = true;
-		animaOption = 2;
-		setStatesAtacking(true);
-		NS_PER_UPDATES = NS_PER_SECOND / velocity;
-		UPS_OBJECT = velocity;
-		G = Math.abs(G);
-		updateReference = System.nanoTime();
-		countReference = System.nanoTime();
-	}
-
-	/**
-	 * Este metodo hace que los elementos vayan al centro.
-	 */
-	public void atackAnimation(Element element, int c) {
-		int mX = Constants.MID_WIDTH_WIN;
-		int mY = Constants.MID_HEIGHT_WIN;
-		element.setVelocityY((element.getVelocityY() + 6 * 0.9));
-		element.setVelocityX((element.getVelocityX() + 6 * 0.9));
-
-		int x = element.getPointX();
-		int y = element.getPointY();
-
-		if (x < (mX - element.getWidth() / 2)) {
-			moveRight(element);
-		}
-
-		if (x > mX - (element.getWidth() / 2)) {
-			moveLeft(element);
-		}
-
-		if (y < mY - (element.getHeight())) {
-			moveDown(element);
-		}
-
-		if (y > mY - (element.getHeight() / 2)) {
-			moveUp(element);
-
-		}
-
-		if (element.collision(new Rectangle(mX, mY, 1, 1))) {
-//			stateAtacking[c] = false;
-			stopAtackAnimation();
-		}
-
-	}
-
-	private void atackOutAnimation(Element element) {
-
-		element.setVelocityY((element.getVelocityY()) + 7 * 0.9);
-		element.setVelocityX((element.getVelocityX()) + 7 * 0.9);
-
-		int x = element.getPointX();
-		int y = element.getPointY();
-
-		int w = Constants.WIDTH_WINDOW;
-		int h = Constants.HEIGHT_WINDOW;
-
-		int mW = Constants.MID_WIDTH_WIN;
-		int mH = Constants.MID_HEIGHT_WIN;
-
-		if (element.getOption() == 'R' && y > 0) {
-
-			moveUp(element);
-
-		}
-
-		if (element.getOption() == 'S' && y < h - element.getHeight()) {
-			moveDown(element);
-		}
-
-		if (element.getOption() == 'P') {
-			if (x < mW && x > 0) {
-				moveLeft(element);
+			if (stateMovingElement[c] && element.getOption() == 'S'
+				&& y > yD[c]) {
+			    moveUp(element);
 			}
 
-			if (x > mW && x < w - element.getWidth()) {
+			if (stateMovingElement[c]
+				&& element.getOption() == 'P') {
+
+			    if (x < xD[c]) {
 				moveRight(element);
+			    }
+
+			    if (x > xD[c]) {
+				moveLeft(element);
+			    }
+
 			}
+
+			if (stateMovingElement[c] && element.getOption() == 'R'
+				&& element.getPointY() >= yD[c]) {
+
+			    stateMovingElement[c] = false;
+			}
+
+			if (stateMovingElement[c] && element.getOption() == 'S'
+				&& element.getPointY() <= yD[c]) {
+			    stateMovingElement[c] = false;
+			}
+
+			if (stateMovingElement[c]
+				&& element.getOption() == 'P') {
+
+			    if (element.getPointX() >= xD[c] && c == 1) {
+
+				stateMovingElement[c] = false;
+			    }
+
+			    if (element.getPointX() <= xD[c] && c == 4) {
+				stateMovingElement[c] = false;
+			    }
+
+			}
+
+			c++;
+		    }
+
 		}
+
+		if (!getStateRunAtack()) {
+		    stopInAnimation();
+		}
+
+		updateReference = System.nanoTime();
+	    }
 	}
 
-	private void moveUp(Element element) {
-		element.setPointY((int) (element.getPointY() - element.getVelocityY()));
-	}
+    }
 
-	private void moveDown(Element element) {
-		element.setPointY((int) (element.getPointY() + element.getVelocityY()));
-	}
+    /**
+     * Este metodo inicializa los atributos o metodos necesarios para realizar
+     * la animacion de Presentacion.
+     * 
+     * @param velocity int; la velocidad con la que correra la animacion.
+     */
+    public void startPresentation(int velocity) {
 
-	private void moveLeft(Element element) {
-		element.setPointX((int) (element.getPointX() - element.getVelocityX()));
-	}
+	NS_PER_UPDATES = NS_PER_SECOND / velocity;
+	UPS_OBJECT = velocity;
+	running = true;
+	animaOption = 2;
+	G = Math.abs(G);
+	defaultElements();
 
-	private void moveRight(Element element) {
-		element.setPointX((int) (element.getPointX() + element.getVelocityX()));
-	}
+	setStateMoving(true);
 
-	public void defaultElements() {
+	updateReference = System.nanoTime();
+	countReference = System.nanoTime();
 
+    }
+
+    /**
+     * Termina la animacion de ataque.
+     */
+    private void stopAtackAnimation() {
+	running = false;
+	setAtacking(false);
+	gameRuleManager.setWinning(true);
+
+    }
+
+    /**
+     * Termina la animacion de presentacion.
+     */
+    public void stopPresentation() {
+	running = false;
+	animaOption = 0;
+
+    }
+
+    /**
+     * Realiza un movimiento leve a todos los elementos, es la animacion de
+     * presentacion durante la ejecucion del juego.
+     */
+    public void presentation() {
+
+	if (running) {
+
+	    loopStart = System.nanoTime();
+
+	    timeElapsed = loopStart - updateReference;
+	    updateReference = loopStart;
+
+	    delta += timeElapsed / NS_PER_UPDATES;
+
+	    if (delta >= 1) {
+		delta = 0;
+		int nP = players.length;
+		int nE;
 		int c = 0;
-		for (int i = 0; i < players.length; i++) {
-			for (int j = 0; j < players[i].getElements().length; j++) {
-				players[i].getElements()[j].setPointX(xD[c]);
-				players[i].getElements()[j].setPointY(yD[c]);
-				players[i].getElements()[j].setWidth(wD[c]);
-				players[i].getElements()[j].setHeight(hD[c]);
+		Element element;
 
-				c++;
+		for (int i = 0; i < nP; i++) {
+		    nE = players[i].getElements().length;
+
+		    for (int j = 0; j < nE; j++) {
+			element = players[i].getElements()[j];
+
+			if (jumping[c]) {
+			    if (G > 0) {
+				G = -G;
+			    }
 			}
+
+			int jump = (int) (element.getPointY()
+				+ element.getVelocityY());
+
+			element.setVelocityY(element.getVelocityY() + G * 0.9);
+
+			if (jump <= (yD[c] - 2)) {
+			    jumping[c] = false;
+			    G = Math.abs(G);
+			} else {
+			    element.setPointY(jump);
+			}
+
+			if (jump >= (yD[c] + 2)) {
+			    element.setPointY(yD[c] + 2);
+			    jumping[c] = true;
+			} else {
+			    element.setPointY(jump);
+			}
+			c++;
+		    }
+
 		}
+		updateReference = System.nanoTime();
+	    }
 
 	}
 
-	private void setStatesAtacking(boolean b) {
-		for (int i = 0; i < stateAtacking.length; i++) {
-			stateAtacking[i] = b;
+    }
+
+    /**
+     * Este metodo inicializa los atributos o metodos necesarios para realizar
+     * la animacion de Ataque.
+     * 
+     * @param velocity int; la velocidad con la que correra la animacion.
+     */
+    public void startAtackAnimation(int velocity) {
+	running = true;
+	animaOption = 3;
+	setStateMoving(true);
+	NS_PER_UPDATES = NS_PER_SECOND / velocity;
+	UPS_OBJECT = velocity;
+	G = Math.abs(G);
+	updateReference = System.nanoTime();
+	countReference = System.nanoTime();
+    }
+
+    /**
+     * Metodo para distribuir el tipo de animacion en el ataque. Si es TRUE, el
+     * elemento atacará, caso contrario, el elemento saldrá del campo.
+     */
+    private void atackAnimation() {
+
+	if (running) {
+
+	    loopStart = System.nanoTime();
+
+	    timeElapsed = loopStart - updateReference;
+	    updateReference = loopStart;
+
+	    delta += timeElapsed / NS_PER_UPDATES;
+	    int c = 0;
+	    if (delta >= 1) {
+		delta = 0;
+		for (int i = 0; i < players.length; i++) {
+		    for (int j = 0; j < players[i].getElements().length; j++) {
+
+			Element element = players[i].getElements()[j];
+
+			if (element.isSelected()) {
+			    atackAnimation(element, c);
+
+			} else {
+			    atackOutAnimation(element, c);
+			}
+			c++;
+		    }
 		}
+		loopStart = System.nanoTime();
+
+	    }
+
 	}
+
+    }
+
+    /**
+     * Este metodo realiza la animacion de ataque al elemento seleccionado por
+     * cada jugador.
+     * 
+     * @param element Element isSelected = true.
+     * @param c       Id para controlar el estado de movimiento.
+     */
+    public void atackAnimation(Element element, int c) {
+	int mX = Constants.MID_WIDTH_WIN;
+	int mY = Constants.MID_HEIGHT_WIN;
+
+	int x = (int) element.getEdge().getX();
+	int y = (int) element.getEdge().getY();
+
+	double vx = Math
+		.abs(element.getVelocityX() + Math.abs(speedsX[c] * 0.9));
+	double vy = Math
+		.abs(element.getVelocityY() + Math.abs(speedsY[c] * 0.9));
+
+	element.setVelocityX(vx);
+	element.setVelocityY(vy);
+
+	if (stateMovingElement[c] && x < (mX)) {
+	    moveRight(element);
+	}
+
+	if (stateMovingElement[c] && x > mX) {
+	    moveLeft(element);
+	}
+
+	if (stateMovingElement[c] && y < mY) {
+	    moveDown(element);
+	}
+
+	if (stateMovingElement[c] && y > mY) {
+	    moveUp(element);
+
+	}
+
+	if (stateMovingElement[c]
+		&& element.collision(new Rectangle(mX - 32, mY - 32, 64, 64))) {
+	    stateMovingElement[c] = false;
+
+	    element.setWidth(40);
+	    element.setHeight(40);
+	    element.setPointX(-130);
+	    element.setPointY(-130);
+	}
+
+	if (!getStateRunAtack()) {
+	    stopAtackAnimation();
+	}
+
+    }
+
+    /**
+     * Este metodo realiza la animacion para retirar el elemento del campo.
+     * 
+     * @param element Element a editar su posicion x, y.
+     * @param c       Id para controlar el estado de movimiento.
+     */
+    private void atackOutAnimation(Element element, int c) {
+
+	int x = element.getPointX();
+	int y = element.getPointY();
+
+	int w = Constants.WIDTH_WINDOW;
+	int h = Constants.HEIGHT_WINDOW;
+
+	int mW = Constants.MID_WIDTH_WIN;
+
+	element.setVelocityY((element.getVelocityY()) + 7 * 0.9);
+	element.setVelocityX((element.getVelocityX()) + 7 * 0.9);
+
+	if (stateMovingElement[c] && element.getOption() == 'R' && y > 0) {
+	    moveUp(element);
+	}
+
+	if (stateMovingElement[c] && element.getOption() == 'S'
+		&& y < h - element.getHeight()) {
+	    moveDown(element);
+	}
+
+	if (stateMovingElement[c] && element.getOption() == 'P') {
+	    if (x < mW && x > 0) {
+		moveLeft(element);
+	    }
+
+	    if (x > mW && x < w - element.getWidth()) {
+		moveRight(element);
+	    }
+	}
+
+	if (stateMovingElement[c] && element.getOption() == 'R'
+		&& element.getPointY() <= 0) {
+	    stateMovingElement[c] = false;
+	}
+
+	if (stateMovingElement[c] && element.getOption() == 'S'
+		&& element.getPointY() >= h - element.getHeight()) {
+	    stateMovingElement[c] = false;
+	}
+
+	if (stateMovingElement[c] && element.getOption() == 'P') {
+
+	    if (x < mW && x <= 0) {
+		stateMovingElement[c] = false;
+	    }
+
+	    if (x > mW && x >= w - element.getWidth()) {
+		stateMovingElement[c] = false;
+	    }
+
+	}
+
+	if (!getStateRunAtack()) {
+	    stopAtackAnimation();
+	}
+    }
+
+    /**
+     * Este metodo resta la posicion Y del elemento - la velocidad Y del
+     * elemento.
+     * 
+     * @param element Element que se modificara la posicion X o Y.
+     */
+    private void moveUp(Element element) {
+	element.setPointY((int) (element.getPointY() - element.getVelocityY()));
+    }
+
+    /**
+     * Este metodo suma la posicion Y del elemento + la velocidad Y del
+     * elemento.
+     * 
+     * @param element
+     */
+    private void moveDown(Element element) {
+	element.setPointY((int) (element.getPointY() + element.getVelocityY()));
+    }
+
+    /**
+     * Este metodo resta la posicion X del elemento - la velocidad X del
+     * elemento.
+     * 
+     * @param element Element que se modificara la posicion X o Y.
+     */
+    private void moveLeft(Element element) {
+	element.setPointX((int) (element.getPointX() - element.getVelocityX()));
+    }
+
+    /**
+     * Este metodo suma la posicion X del elemento + la velocidad X del
+     * elemento.
+     * 
+     * @param element Element que se modificara la posicion X o Y.
+     */
+    private void moveRight(Element element) {
+	element.setPointX((int) (element.getPointX() + element.getVelocityX()));
+    }
+
+    /**
+     * Este metodo establece todos los elemtos de cada jugador por defecto.
+     */
+    public void defaultElements() {
+
+	int c = 0;
+	for (int i = 0; i < players.length; i++) {
+	    for (int j = 0; j < players[i].getElements().length; j++) {
+		players[i].getElements()[j].setPointX(xD[c]);
+		players[i].getElements()[j].setPointY(yD[c]);
+		players[i].getElements()[j].setWidth(wD[c]);
+		players[i].getElements()[j].setHeight(hD[c]);
+
+		players[i].getElements()[j].setVelocityX(0);
+		players[i].getElements()[j].setVelocityY(0);
+
+		c++;
+	    }
+	}
+
+    }
+
+    /**
+     * Establece un boolean al control de movimiento para todos los elementos de
+     * cada jugador.
+     * 
+     * @param b Booleano para establecer en el control de movimiento.
+     */
+    private void setStateMoving(boolean b) {
+	for (int i = 0; i < stateMovingElement.length; i++) {
+	    stateMovingElement[i] = b;
+	}
+    }
+
+    /**
+     * Busca si hay un elemento, en el control de movimiento, si un elemento aun
+     * sigue en movimiento.
+     * 
+     * @return Boolean; TRUE si un elemento sigue en movimiento.
+     */
+    private boolean getStateRunAtack() {
+
+	for (int i = 0; i < stateMovingElement.length; i++) {
+
+	    if (stateMovingElement[i] == true) {
+		return true;
+	    }
+	}
+	return false;
+    }
 
 }
