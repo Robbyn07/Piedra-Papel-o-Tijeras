@@ -7,86 +7,112 @@ import ec.edu.ups.view.Window;
 
 public class MainManager {
 
-	private boolean working;
-	private final String title;
-	private final int width;
-	private final int height;
+    private boolean working;
+    private final String title;
+    private final int width;
+    private final int height;
 
-	private Screen screen;
-	private Window window;
-	private StateManager stateManager;
+    private Screen screen;
+    private Window window;
+    private StateManager stateManager;
 
-	public MainManager(String title) {
-		this.working = false;
-		this.title = title;
-		this.width = Constants.FULL_WIDTH_WINDOW;
-		this.height = Constants.FULL_HEIGHT_WINDOW;
+    int aps;
+    int fps;
+    int ups;
+
+    public MainManager(String title) {
+	this.working = false;
+	this.title = title;
+	this.width = Constants.FULL_WIDTH_WINDOW;
+	this.height = Constants.FULL_HEIGHT_WINDOW;
+    }
+
+    public void startGame() {
+	working = true;
+	start();
+    }
+
+    public void mainLoop() {
+	aps = 0;
+	fps = 0;
+	ups = 0;
+
+	final int NS_PER_SECOND = 1000000000;
+	final byte UPS_OBJECT = 60;
+	final double NS_PER_UPDATES = NS_PER_SECOND / UPS_OBJECT;
+
+	long updateReference = System.nanoTime();
+	long countReference = System.nanoTime();
+
+	double timeElapsed;
+	double delta = 0;
+
+	long loopStart;
+
+	// requestFocus();
+	while (working) {
+	    loopStart = System.nanoTime();
+
+	    timeElapsed = loopStart - updateReference;
+	    updateReference = loopStart;
+
+	    delta += timeElapsed / NS_PER_UPDATES;
+
+	    while (delta >= 1) {
+		update();
+		ups++;
+		delta--;
+		print();
+		fps++;
+
+	    }
+
+	    if (System.nanoTime() - countReference > NS_PER_SECOND) {
+		ups = 0;
+		fps = 0;
+		countReference = System.nanoTime();
+	    }
 	}
 
-	public void startGame() {
-		working = true;
-		start();
-	}
+    }
 
-	public void mainLoop() {
-		int aps = 0;
-		int fps = 0;
-		int ups = 0;
+    private void start() {
+	screen = new Screen(width, height);
+	window = new Window(this.title, screen, width, height);
+	stateManager = new StateManager();
+    }
 
-		final int NS_PER_SECOND = 1000000000;
-		final byte UPS_OBJECT = 30;
-		final double NS_PER_UPDATES = NS_PER_SECOND / UPS_OBJECT;
+    private void update() {
+	ControlManager.keyboard.update();
+	stateManager.update();
+    }
 
-		long updateReference = System.nanoTime();
-		long countReference = System.nanoTime();
+    private void print() {
+	screen.print(stateManager);
+    }
 
-		double timeElapsed;
-		double delta = 0;
+    public int getAps() {
+	return aps;
+    }
 
-		long loopStart;
+    public void setAps(int aps) {
+	this.aps = aps;
+    }
 
-		// requestFocus();
-		while (working) {
-			loopStart = System.nanoTime();
+    public int getFps() {
+	return fps;
+    }
 
-			timeElapsed = loopStart - updateReference;
-			updateReference = loopStart;
+    public void setFps(int fps) {
+	this.fps = fps;
+    }
 
-			delta += timeElapsed / NS_PER_UPDATES;
+    public int getUps() {
+	return ups;
+    }
 
-			while (delta >= 1) {
-				update();
-				ups++;
-				delta--;
-
-				print();
-				fps++;
-
-			}
-
-			if (System.nanoTime() - countReference > NS_PER_SECOND) {
-//				System.out.println(title + " | UPS: " + ups + " | FPS: " + fps);
-				ups = 0;
-				fps = 0;
-				countReference = System.nanoTime();
-			}
-		}
-
-	}
-
-	private void start() {
-		screen = new Screen(width, height);
-		window = new Window(this.title, screen, width, height);
-		stateManager = new StateManager();
-	}
-
-	private void update() {
-		ControlManager.keyboard.update();
-		stateManager.update();
-	}
-
-	private void print() {
-		screen.print(stateManager);
-	}
+    public void setUps(int ups) {
+	this.ups = ups;
+    }
 
 }
