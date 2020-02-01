@@ -223,7 +223,7 @@ public class ElementAnimation {
 
 	    delta += timeElapsed / NS_PER_UPDATES;
 
-	    if (delta >= 1) {
+	    while (delta >= 1) {
 		delta = 0;
 
 		int c = 0;
@@ -302,6 +302,7 @@ public class ElementAnimation {
 
 		updateReference = System.nanoTime();
 	    }
+
 	}
 
     }

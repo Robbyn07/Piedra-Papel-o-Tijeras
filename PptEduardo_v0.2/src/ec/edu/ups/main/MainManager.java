@@ -1,5 +1,9 @@
 package ec.edu.ups.main;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JPanel;
+
 import ec.edu.ups.controller.statemachine.StateManager;
 import ec.edu.ups.tools.ControlManager;
 import ec.edu.ups.view.Screen;
@@ -16,6 +20,9 @@ public class MainManager {
     private Window window;
     private StateManager stateManager;
 
+    private JPanel[] panels;
+    private int currentPanel;
+
     int aps;
     int fps;
     int ups;
@@ -25,6 +32,9 @@ public class MainManager {
 	this.title = title;
 	this.width = Constants.FULL_WIDTH_WINDOW;
 	this.height = Constants.FULL_HEIGHT_WINDOW;
+
+	this.panels = new JPanel[3];
+	this.currentPanel = 0;
     }
 
     public void startGame() {
@@ -52,7 +62,6 @@ public class MainManager {
 	// requestFocus();
 	while (working) {
 	    loopStart = System.nanoTime();
-
 	    timeElapsed = loopStart - updateReference;
 	    updateReference = loopStart;
 
@@ -77,18 +86,39 @@ public class MainManager {
     }
 
     private void start() {
+	stateManager = new StateManager(this);
 	screen = new Screen(width, height);
-	window = new Window(this.title, screen, width, height);
-	stateManager = new StateManager();
+	JPanel screenPanel = new JPanel(new BorderLayout());
+	screenPanel.add(screen, BorderLayout.CENTER);
+
+	JPanel startPanel = stateManager.getStartGameState().getStartGameGUI();
+
+	this.panels[0] = startPanel;
+	this.panels[1] = screenPanel;
+
+	window = new Window(this.title, width, height);
+
+	addCurrentPanel();
+
+    }
+
+    private void addCurrentPanel() {
+	this.window.setPanel(panels[currentPanel]);
+
     }
 
     private void update() {
-	ControlManager.keyboard.update();
-	stateManager.update();
+	if (currentPanel == 1) {
+	    ControlManager.keyboard.update();
+	    stateManager.update();
+	}
+
     }
 
     private void print() {
-	screen.print(stateManager);
+	if (currentPanel == 1) {
+	    screen.print(stateManager);
+	}
     }
 
     public int getAps() {
@@ -113,6 +143,47 @@ public class MainManager {
 
     public void setUps(int ups) {
 	this.ups = ups;
+    }
+
+    public boolean isWorking() {
+	return working;
+    }
+
+    public void setWorking(boolean working) {
+	this.working = working;
+    }
+
+    public int getCurrentPanel() {
+	return currentPanel;
+    }
+
+    public StateManager getStateManager() {
+	return stateManager;
+    }
+
+    public void setStateManager(StateManager stateManager) {
+	this.stateManager = stateManager;
+    }
+
+    public JPanel[] getPanels() {
+	return panels;
+    }
+
+    public void setPanels(JPanel[] panels) {
+	this.panels = panels;
+    }
+
+    public void setCurrentPanel(int currentPanel) {
+	this.currentPanel = currentPanel;
+
+	addCurrentPanel();
+
+	this.stateManager.changeState(currentPanel);
+
+	if (currentPanel == 1) {
+	    this.window.pack();
+	}
+
     }
 
 }
