@@ -1,5 +1,6 @@
 package ec.edu.ups.controller;
 
+import ec.edu.ups.model.Element;
 import ec.edu.ups.model.Player;
 import ec.edu.ups.tools.ControlManager;
 
@@ -16,6 +17,7 @@ public class RuleController {
 
 	private int p1 = 100;
 	private int p2 = 100;
+	private int option;
 
 	public RuleController(Player player1, Player player2) {
 		super();
@@ -31,8 +33,22 @@ public class RuleController {
 		return p2;
 	}
 
+	public int getOption() {
+		return option;
+	}
+
+	public void setOption(int option) {
+		this.option = option;
+	}
+
 	public Player getWinner() {
 		winner = winner();
+		if (p1 != 100) {
+			setFalseElement(player1.getElements()[p1]);
+		}
+		if (p2 != 100) {
+			setFalseElement(player1.getElements()[p2]);
+		}
 		this.p1 = 100;
 		this.p2 = 100;
 		return winner;
@@ -50,8 +66,8 @@ public class RuleController {
 		 * otro jugador?
 		 */
 
-		int optionPlayer1 = option(player1);
-		int optionPlayer2 = option(player2);
+		int optionPlayer1 = selectOption(player1);
+		int optionPlayer2 = selectOption(player2);
 		winner = null;
 		System.out.println("Comprobando..." + optionPlayer1 + " | " + optionPlayer2);
 
@@ -100,7 +116,7 @@ public class RuleController {
 	 * Metodo para saber que opcion se escogio, sirve especialmente si se da el caso
 	 * de que no se escoge ninguna opcion, entonces devuelve un valor nulo.
 	 */
-	private int option(Player player) {
+	private int selectOption(Player player) {
 		int option = 100;
 		int n = player.getElements().length;
 
@@ -109,13 +125,27 @@ public class RuleController {
 			if (player.getElements()[i].isSelected() == true) {
 				option = i;
 				player.getElements()[i].setSelected(false);
-				break;
 			}
 
 		}
-
 		return option;
 	}
+
+	public void setFalseElement(Element element) {
+		element.setSelected(false);
+
+	}
+//
+//	public Element getTrueElement(Player player) {
+//		int n = player.getElements().length;
+//
+//		for (int i = 0; i < n; i++) {
+//			if (player.getElements()[i].isSelected() == true) {
+//				return player.getElements()[i];
+//			}
+//		}
+//		return null;
+//	}
 
 	/**
 	 * 

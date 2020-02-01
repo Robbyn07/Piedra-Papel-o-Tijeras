@@ -33,18 +33,18 @@ public class GameRuleManager implements GameState {
 	// private SpriteSheet spriteSheetR;
 	// private SpriteSheet spriteSheetP;
 	// private SpriteSheet spriteSheetS;
-	private SpriteSheet spriteSheetE;
-	private SpriteSheet spriteSheetInv;
+	private SpriteSheet sSElements;
+	private SpriteSheet sSElementsInv;
 
 	public GameRuleManager(int roundNumber, String player1, String player2) {
 		// Temporal
 		// this.spriteSheetR = new SpriteSheet(Constants.ROCK_PATH, 64, false);
 		// this.spriteSheetP = new SpriteSheet(Constants.PAPER_PATH, 64, false);
 		// this.spriteSheetS = new SpriteSheet(Constants.SCISSORS_PATH, 64, false);
-		this.spriteSheetE = new SpriteSheet(Constants.ELEMENTS_PATH, 128, false);
-		this.spriteSheetInv = new SpriteSheet(Constants.ELEMENTS_INV_PATH, 128, false);
 
 		// Fin Temporal\
+		this.sSElements = new SpriteSheet(Constants.ELEMENTS_PATH, 128, false);
+		this.sSElementsInv = new SpriteSheet(Constants.ELEMENTS_INV_PATH, 128, false);
 
 		this.players = new Player[2];
 
@@ -100,6 +100,7 @@ public class GameRuleManager implements GameState {
 		roundController.startRound();
 		estimatedTime = 0;
 		startTime = System.nanoTime();
+		paintFaces(0);
 	}
 
 	@Override
@@ -130,16 +131,40 @@ public class GameRuleManager implements GameState {
 
 	private void paintSecond() {
 
+		int op1;
+		int op2;
+
 		if (second == 0) {
 			roundController.selectOption();
+
+			op1 = roundController.getRuleController().getP1();
+			op2 = roundController.getRuleController().getP2();
+
 			winner = roundController.getRoundWinner();
-			if (winner != null)
+
+			if (winner != null) {
 				roundController.finishedRound();
-		}
-		if (second <= 0) {
+				System.out.println("W: " + winner.getName() + "selec: " + roundController.getOption());
+			}
 
 			gameGui.setWinner(winner);
 			gameGui.setRoundFinishState(true);
+
+			if (winner == null) {
+				paintFaces(8);
+			}
+			if (op1 != 100) {
+				paintFaces(4);
+				paintAttackFace(players[0].getElements()[op1]);
+			}
+
+			if (op2 != 100) {
+				if (op1 == 100) {
+					paintFaces(4);
+				}
+				paintAttackFace(players[1].getElements()[op2]);
+			}
+
 		}
 
 		if (second <= -3) {
@@ -168,13 +193,13 @@ public class GameRuleManager implements GameState {
 		// BufferedImage imageR = this.spriteSheetR.getSprites(0).getImage();
 		// BufferedImage imageP = this.spriteSheetP.getSprites(0).getImage();
 		// BufferedImage imageS = this.spriteSheetS.getSprites(0).getImage();
-		BufferedImage imageR = this.spriteSheetE.getSprites(0, 1).getImage();
-		BufferedImage imageP = this.spriteSheetE.getSprites(1, 0).getImage();
-		BufferedImage imageS = this.spriteSheetE.getSprites(0).getImage();
+		BufferedImage imageR = this.sSElements.getSprites(0, 1).getImage();
+		BufferedImage imageP = this.sSElements.getSprites(1, 0).getImage();
+		BufferedImage imageS = this.sSElements.getSprites(0).getImage();
 
-		elements[0] = new Element(xR, yR, imageR, false, 'R');
-		elements[1] = new Element(xP, yP, imageP, false, 'P');
-		elements[2] = new Element(xS, yS, imageS, false, 'S');
+		elements[0] = new Element(xR, yR, imageR, false, 'R', Constants.FACES_PATH, 64, 9, xR + 32, yR + 32);
+		elements[1] = new Element(xP, yP, imageP, false, 'P', Constants.FACES_PATH, 64, 9, xP + 5, yP + 20);
+		elements[2] = new Element(xS, yS, imageS, false, 'S', Constants.FACES_PATH, 64, 9, xS + 33, yS + 27);
 		return elements;
 
 	}
@@ -198,19 +223,42 @@ public class GameRuleManager implements GameState {
 		// BufferedImage imageR = this.spriteSheetE.getSprites(0).getImage();
 		// BufferedImage imageP = this.spriteSheetE.getSprites(0).getImage();
 		// BufferedImage imageS = this.spriteSheetE.getSprites(0).getImage();
-		BufferedImage imageR = this.spriteSheetInv.getSprites(1, 1).getImage();
-		BufferedImage imageP = this.spriteSheetInv.getSprites(0).getImage();
-		BufferedImage imageS = this.spriteSheetInv.getSprites(1, 0).getImage();
+		BufferedImage imageR = this.sSElementsInv.getSprites(1, 1).getImage();
+		BufferedImage imageP = this.sSElementsInv.getSprites(0).getImage();
+		BufferedImage imageS = this.sSElementsInv.getSprites(1, 0).getImage();
 
-		elements[0] = new Element(xR, yR, imageR, false, 'R');
-		elements[1] = new Element(xP, yP, imageP, false, 'P');
-		elements[2] = new Element(xS, yS, imageS, false, 'S');
+		elements[0] = new Element(xR, yR, imageR, false, 'R', Constants.FACES_PATH, 64, 9, xR + 32, yR + 32);
+		elements[1] = new Element(xP, yP, imageP, false, 'P', Constants.FACES_PATH, 64, 9, xP + 60, yP + 20);
+		elements[2] = new Element(xS, yS, imageS, false, 'S', Constants.FACES_PATH, 64, 9, xS + 32, yS + 27);
 		return elements;
 
 	}
 
 	public int[] getDataGame() {
 		return roundController.getData();
+	}
+
+	public void paintFaces(int index) {
+		for (int i = 0; i < players.length; i++) {
+			for (int j = 0; j < players[i].getElements().length; j++) {
+				players[i].getElements()[j].getFaces().setIndex(index);
+			}
+		}
+	}
+
+	public void paintAttackFace(Element element) {
+		switch (element.getOption()) {
+		case 'R':
+			element.getFaces().setIndex(1);
+			break;
+		case 'P':
+			element.getFaces().setIndex(1);
+			break;
+		case 'S':
+			element.getFaces().setIndex(1);
+			break;
+		default:
+		}
 	}
 
 }

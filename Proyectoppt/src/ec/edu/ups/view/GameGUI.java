@@ -105,6 +105,7 @@ public class GameGUI {
 				xE = players[i].getElements()[j].getPointX();
 				yE = players[i].getElements()[j].getPointY();
 				g.drawImage(image, xE, yE, null);
+				players[i].getElements()[j].paint(g);
 			}
 
 		}

@@ -3,13 +3,13 @@ package ec.edu.ups.model;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
-import ec.edu.ups.controller.statemachine.GameState;
-import ec.edu.ups.controller.statemachine.StateManager;
-
-public class Element implements GameState {
+public class Element {
 
 	private int pointX;
 	private int pointY;
+
+	private int pointXF;
+	private int pointYF;
 
 	private BufferedImage image;
 
@@ -17,13 +17,29 @@ public class Element implements GameState {
 
 	private char option;
 
-	public Element(int pointX, int pointY, BufferedImage image, boolean selected, char option) {
+	private Faces faces;
+
+	public Element(int pointX, int pointY, BufferedImage image, boolean selected, char option, String facesPath,
+			int sizeFaces, int nFaces, int pointXF, int pointYF) {
 		super();
 		this.pointX = pointX;
 		this.pointY = pointY;
 		this.image = image;
 		this.selected = selected;
 		this.option = option;
+
+		this.pointXF = pointXF;
+		this.pointYF = pointYF;
+
+		faces = new Faces(facesPath, sizeFaces, nFaces);
+	}
+
+	public void updateFace(int index) {
+		faces.setIndex(index);
+	}
+
+	public void paint(Graphics g) {
+		g.drawImage(faces.getCurrentFace(), pointXF, pointYF, null);
 	}
 
 	public int getPointX() {
@@ -66,16 +82,12 @@ public class Element implements GameState {
 		this.selected = selected;
 	}
 
-	@Override
-	public void update(StateManager stateManager) {
-		// TODO Auto-generated method stub
-
+	public Faces getFaces() {
+		return faces;
 	}
 
-	@Override
-	public void paint(Graphics g) {
-		g.drawImage(getImage(), pointX, pointY, null);
-		g.dispose();
+	public void setFaces(Faces faces) {
+		this.faces = faces;
 	}
 
 }

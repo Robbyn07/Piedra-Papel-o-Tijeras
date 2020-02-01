@@ -12,6 +12,7 @@ public class RoundController {
 	private int winsP2;
 	private int round;
 	private int[] data; // datos actuales de la partida
+	private int option;
 
 	public RoundController(Player player1, Player player2) {
 		super();
@@ -19,7 +20,7 @@ public class RoundController {
 		data = new int[3];
 		this.player1 = player1;
 		this.player2 = player2;
-
+		option = 100;
 		this.ruleController = new RuleController(player1, player2);
 	}
 
@@ -79,6 +80,14 @@ public class RoundController {
 		this.data = data;
 	}
 
+	public int getOption() {
+		return option;
+	}
+
+	public void setOption(int option) {
+		this.option = option;
+	}
+
 	/**
 	 * Metodo que obtiene datos de las victorias de los jugadores y la ronda en la
 	 * que va.
@@ -124,17 +133,18 @@ public class RoundController {
 	}
 
 	public void selectOption() {
-		System.out.println("p1: " + ruleController.getP1());
 		ruleController.setOption(this.player1, ruleController.getP1());
 		ruleController.setOption(this.player2, ruleController.getP2());
 	}
 
 	public Player getRoundWinner() {
+		option = ruleController.getOption();
 		return ruleController.getWinner();
 	}
 
 	public void startRound() {
 		gameData();
+		ruleController.setOption(100);
 		ruleController.setWinner(null);
 	}
 
