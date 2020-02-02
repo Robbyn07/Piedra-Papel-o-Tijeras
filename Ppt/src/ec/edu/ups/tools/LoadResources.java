@@ -6,12 +6,17 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
 
 public class LoadResources {
 
@@ -96,6 +101,30 @@ public class LoadResources {
     	}
 
     	return content;
+    }
+    
+    public static Clip loadSound(final String path) {
+    	Clip clip = null;
+    	
+    	try {
+    		
+    		InputStream input = ClassLoader.class.getResourceAsStream(path);
+    		AudioInputStream audio = AudioSystem.getAudioInputStream(
+    								new BufferedInputStream(input));
+    		
+    		DataLine.Info info = new DataLine.Info(Clip.class, audio.getFormat());
+    		
+    		clip = (Clip) AudioSystem.getLine(info);
+    		
+    		clip.open(audio);
+    		
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+		}
+    	    	
+    	return clip;
     }
 
 }

@@ -2,13 +2,15 @@ package ec.edu.ups.controller;
 
 import ec.edu.ups.model.Player;
 import ec.edu.ups.tools.ControlManager;
+import ec.edu.ups.tools.Sound;
 
 public class RuleController {
 
 	private Player player1;
 	private Player player2;
 	private Player winner;
-	private int elementWinner;
+	
+	private Sound sound;
 
 	/*
 	 * Identificacion para los elementos del jugador: 100 = no selecciona ninguna
@@ -52,14 +54,6 @@ public class RuleController {
 		this.winner = winner;
 	}
 
-	public int getElementWinner() {
-		return elementWinner;
-	}
-
-	public void setElementWinner(int elementWinner) {
-		this.elementWinner = elementWinner;
-	}
-
 	private Player winner() {
 
 		/*
@@ -75,58 +69,51 @@ public class RuleController {
 
 		if (optionPlayer1 == optionPlayer2) {
 			// EMPATE
-			if (optionPlayer1 == 100) {
-				setElementWinner(100);
-			} else {
-				setElementWinner(optionPlayer1);
-			}
-
+			drawSound();
 			return null;
 		} else if (optionPlayer1 == 100 && optionPlayer2 != 100) {
 			// PLAYER1 no escogio una opcion a tiempo
+			yaySound();
 			player2.addWin();
 			winner = player2;
-
 		} else if (optionPlayer1 != 100 && optionPlayer2 == 100) {
 			// PLAYER2 no escogio una opcion a tiempo
+			yaySound();
 			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 0 && optionPlayer2 == 1) {
 			// piedra vs papel
+			paperSound();
 			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 0 && optionPlayer2 == 2) {
 			// piedra vs tijera
+			rockSound();
 			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 1 && optionPlayer2 == 0) {
 			// papel vs piedra
+			paperSound();
 			player1.addWin();
 			winner = player1;
 		} else if (optionPlayer1 == 1 && optionPlayer2 == 2) {
 			// papel vs tijera
+			scissorSound();
 			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 2 && optionPlayer2 == 0) {
 			// tijera vs piedra
+			rockSound();
 			player2.addWin();
 			winner = player2;
 		} else if (optionPlayer1 == 2 && optionPlayer2 == 1) {
 			// tijera vs papel
+			scissorSound();
 			player1.addWin();
 			winner = player1;
 		} else {
 			winner = null;
-			setElementWinner(100);
-			return winner;
 		}
-
-		if (winner == player1) {
-			setElementWinner(optionPlayer1);
-		} else {
-			setElementWinner(optionPlayer2);
-		}
-
 		return winner;
 	}
 
@@ -216,6 +203,31 @@ public class RuleController {
 
 		}
 
+	}
+	
+	private void paperSound() {
+		this.sound = new Sound("/ec/edu/ups/resources/sounds/paper.wav");
+		this.sound.play();
+	}
+	
+	private void scissorSound() {
+		this.sound = new Sound("/ec/edu/ups/resources/sounds/scissors.wav");
+		this.sound.play();
+	}
+	
+	private void rockSound() {
+		this.sound = new Sound("/ec/edu/ups/resources/sounds/rock.wav");
+		this.sound.play();
+	}
+	
+	private void drawSound() {
+		this.sound = new Sound("/ec/edu/ups/resources/sounds/draw.wav");
+		this.sound.play();
+	}
+	
+	private void yaySound() {
+		this.sound = new Sound("/ec/edu/ups/resources/sounds/yay.wav");
+		this.sound.play();
 	}
 
 }
