@@ -46,9 +46,8 @@ public class Window extends JFrame {
 	jpanel.revalidate();
 	mainPanel.repaint();
 
-//		System.out.println(jpanel.getName());
-
 	setLocationRelativeTo(null);
+
     }
 
 }

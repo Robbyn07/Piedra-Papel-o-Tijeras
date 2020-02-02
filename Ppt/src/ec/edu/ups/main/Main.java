@@ -8,6 +8,4 @@ public class Main {
 	main.mainLoop();
     }
 
-    // Holi
-
 }

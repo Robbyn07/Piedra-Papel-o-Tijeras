@@ -1,7 +1,6 @@
 package ec.edu.ups.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -32,19 +31,13 @@ public class EndGameGUI extends JPanel implements ActionListener {
     private String[] final_images;
 
     public EndGameGUI(GameWinnerManager gameWinnerManager) {
-	// setSize(500,500);
 	path = "/ec/edu/ups/resources/textures/pptarmas.png";
 	final_images = new String[4];
 	images();
 	// ****
 	setImagePath();
-	// this.path = Constants.RING_PATH;
 	// ****
 	this.gameWinnerManager = gameWinnerManager;
-	// player = p1.getName();
-//
-//	initComponets();
-
     }
 
     private void spaces() {
@@ -62,27 +55,13 @@ public class EndGameGUI extends JPanel implements ActionListener {
 
 	setLayout(null);
 
-//	winnerMessage = new JLabel("AND THE WINNER IS:");
-//	winner = new JLabel(space + player + "!!!");
-//
-//	winnerMessage.setFont(new Font("Serif", Font.BOLD, 90));
-//	winner.setFont(new Font("Serif", Font.BOLD, 120));
-//
-////	winnerMessage.setBackground(new Color(92, 145, 184));
-//	winnerMessage.setForeground(Color.white);
-//	winner.setForeground(Color.white);
-////	winnerMessage.setOpaque(true);
-
 	boton = new JButton("INICIO");
 	boton.setForeground(Color.white);
 	boton.setActionCommand("volver");
 	boton.addActionListener(this);
 	boton.setBackground(new Color(92, 145, 184));
-	// boton.setBounds(getSize().width / 2 - 30, getSize().height - 20, 60,
-	// 10);
 	boton.setBounds(2, 2, 100, 70);
-//	add(winnerMessage, BorderLayout.NORTH);
-//	add(winner, BorderLayout.CENTER);
+
 	add(boton);
 
 	setName("Panel Final");
@@ -117,7 +96,6 @@ public class EndGameGUI extends JPanel implements ActionListener {
 
 	g.fillRect(0, 0, getSize().width, getSize().height);
 
-	Dimension tamano = getSize();
 	imagen = new ImageIcon(getClass().getResource(path));
 
 	g.setColor(Color.BLACK);
@@ -127,11 +105,6 @@ public class EndGameGUI extends JPanel implements ActionListener {
 	g.drawImage(imagen.getImage(),
 		(getSize().width / 2) - (imagen.getIconWidth() / 2), 6,
 		imagen.getIconWidth(), imagen.getIconHeight(), null);
-
-	System.out.println(
-		"TOTAL: " + (getSize().height - imagen.getIconHeight()));
-	System.out.println("VENTANA: " + getSize().height);
-	System.out.println("IMAGEN: " + imagen.getIconHeight());
 
 	g.setColor(new Color(92, 145, 184));
 	g.fillRect(20, imagen.getIconHeight() + 100, getSize().width - 40,
@@ -147,16 +120,11 @@ public class EndGameGUI extends JPanel implements ActionListener {
 	super.paint(g);
     }
 
-    // ****
-
     public void setGameWinnet(String gameWinner) {
 	setImagePath();
-//	player = gameWinner;
 	player = "Y EL GANADOR ES: " + gameWinner;
 	spaces();
 	this.removeAll();
-//	this.revalidate();
-//	this.repaint();
 	initComponets();
 
     }

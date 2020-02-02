@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 import ec.edu.ups.controller.statemachine.StateManager;
 import ec.edu.ups.tools.ControlManager;
+import ec.edu.ups.tools.Sound;
 import ec.edu.ups.view.Screen;
 import ec.edu.ups.view.Window;
 
@@ -23,6 +24,8 @@ public class MainManager {
     private JPanel[] panels;
     private int currentPanel;
 
+    private Sound musicT;
+
     int aps;
     int fps;
     int ups;
@@ -35,11 +38,14 @@ public class MainManager {
 
 	this.panels = new JPanel[3];
 	this.currentPanel = 0;
+
     }
 
     public void startGame() {
 	working = true;
 	start();
+	this.musicT = new Sound("/ec/edu/ups/resources/sounds/warmusic.wav");
+	this.musicT.loop();
     }
 
     public void mainLoop() {
@@ -71,14 +77,12 @@ public class MainManager {
 		update();
 		ups++;
 		delta--;
+		print();
+		fps++;
 
 	    }
 
-	    print();
-	    fps++;
-
 	    if (System.nanoTime() - countReference > NS_PER_SECOND) {
-		System.out.println(fps);
 		ups = 0;
 		fps = 0;
 		countReference = System.nanoTime();
@@ -95,8 +99,12 @@ public class MainManager {
 
 	JPanel startPanel = stateManager.getStartGameState().getStartGameGUI();
 
+	JPanel winnerPanel = stateManager.getGameWinnerManager()
+		.getEndGameGUI();
+
 	this.panels[0] = startPanel;
 	this.panels[1] = screenPanel;
+	this.panels[2] = winnerPanel;
 
 	window = new Window(this.title, width, height);
 
@@ -106,6 +114,13 @@ public class MainManager {
 
     private void addCurrentPanel() {
 	this.window.setPanel(panels[currentPanel]);
+
+//		this.window.setLocationRelativeTo(null);
+	if (currentPanel == 1) {
+	    this.window.pack();
+	    this.screen.requestFocus();
+
+	}
 
     }
 
@@ -178,13 +193,8 @@ public class MainManager {
     public void setCurrentPanel(int currentPanel) {
 	this.currentPanel = currentPanel;
 
-	addCurrentPanel();
-
 	this.stateManager.changeState(currentPanel);
-
-	if (currentPanel == 1) {
-	    this.window.pack();
-	}
+	addCurrentPanel();
 
     }
 
