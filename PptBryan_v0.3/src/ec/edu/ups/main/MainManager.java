@@ -71,12 +71,14 @@ public class MainManager {
 		update();
 		ups++;
 		delta--;
-		print();
-		fps++;
 
 	    }
 
+	    print();
+	    fps++;
+
 	    if (System.nanoTime() - countReference > NS_PER_SECOND) {
+		System.out.println(fps);
 		ups = 0;
 		fps = 0;
 		countReference = System.nanoTime();
