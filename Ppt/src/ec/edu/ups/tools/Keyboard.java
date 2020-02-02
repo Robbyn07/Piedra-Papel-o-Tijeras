@@ -20,8 +20,7 @@ public class Keyboard implements KeyListener {
 		super();
 	}
 
-	public Keyboard(String rock1, String scissors1, String paper1, 
-					String rock2, String scissors2, String paper2) {
+	public Keyboard(String rock1, String scissors1, String paper1, String rock2, String scissors2, String paper2) {
 
 	}
 
@@ -61,6 +60,7 @@ public class Keyboard implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+//		System.out.println("k: " + e.getKeyChar());
 	}
 
 	@Override

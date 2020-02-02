@@ -8,6 +8,7 @@ import ec.edu.ups.controller.RoundController;
 import ec.edu.ups.controller.statemachine.GameState;
 import ec.edu.ups.controller.statemachine.StateManager;
 import ec.edu.ups.main.Constants;
+import ec.edu.ups.main.MainManager;
 import ec.edu.ups.model.Element;
 import ec.edu.ups.model.Player;
 import ec.edu.ups.tools.ElementAnimation;
@@ -28,32 +29,35 @@ public class GameRuleManager implements GameState {
     private Player winner;
     private ElementAnimation elementAni;
     private boolean[] elementAnimation;
+    private Player gameWinner;
 
     private RoundController roundController;
     private GameGUI gameGui;
+    private MainManager mainManager;
 
     private boolean winning;
     private SpriteSheet sSElements;
     private SpriteSheet sSElementsInv;
 
-    public GameRuleManager(int roundNumber, String player1, String player2) {
-
+    public GameRuleManager(int roundNumber, String player1, String player2,
+	    MainManager mainManager) {
+	this.mainManager = mainManager;
 	this.sSElements = new SpriteSheet(Constants.ELEMENTS_PATH, 128, false);
 	this.sSElementsInv = new SpriteSheet(Constants.ELEMENTS_INV_PATH, 128,
 		false);
 
 	this.players = new Player[2];
 
+	this.roundNumber = roundNumber;
+
 	this.players[0] = new Player(player1, getElementsPlayer1());
 	this.players[1] = new Player(player2, getElementsPlayer2());
-
-	this.roundNumber = roundNumber;
 
 	roundController = new RoundController(this.players[0], this.players[1]);
 	gameGui = new GameGUI(this);
 
 	this.elementAni = new ElementAnimation(players, this);
-	startState();
+//		startState();
 
     }
 
@@ -97,10 +101,22 @@ public class GameRuleManager implements GameState {
 	this.winning = winning;
     }
 
+    public Player getGameWinner() {
+	return gameWinner;
+    }
+
+    public void setGameWinner(Player gameWinner) {
+	this.gameWinner = gameWinner;
+    }
+
     public void startState() {
+	this.players[0].setWin(0);
+	this.players[1].setWin(0);
 	status = true;
 	winning = false;
 	startRound();
+	System.out.println("Start");
+	gameWinner = null;
     }
 
     public void startRound() {
@@ -147,7 +163,10 @@ public class GameRuleManager implements GameState {
 
 	} else {
 	    System.out.println("Cambio de estado");
-	    stateManager.changeState(1);
+	    gameWinner = this.roundController.finalWinner();
+	    this.mainManager.getStateManager().getGameWinnerManager()
+		    .getEndGameGUI().setGameWinnet(gameWinner.getName());
+	    this.mainManager.setCurrentPanel(2);
 	}
 
     }
