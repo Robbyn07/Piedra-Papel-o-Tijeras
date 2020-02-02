@@ -8,43 +8,44 @@ import javax.swing.JPanel;
 
 public class Window extends JFrame {
 
-    private String title;
-    private JPanel mainPanel;
+	private String title;
+	private JPanel mainPanel;
 
-    public Window(final String title, int width, int height) {
-	this.title = title;
-	configWindow(width, height);
-    }
+	public Window(final String title, int width, int height) {
+		this.title = title;
+		configWindow(width, height);
+	}
 
-    private void configWindow(int width, int height) {
-	setTitle(title);
-	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	private void configWindow(int width, int height) {
+		setTitle(title);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	setSize(width, height);
-	setResizable(false);
-	// setIconImage(image);
-	setLayout(new BorderLayout());
+		setSize(width, height);
+		setResizable(false);
+		// setIconImage(image);
+		setLayout(new BorderLayout());
 
-	mainPanel = new JPanel();
-	mainPanel.setLayout(new BorderLayout());
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+//		mainPanel.setBackground(Color.red);
 
-	add(mainPanel, BorderLayout.CENTER);
+		add(mainPanel, BorderLayout.CENTER);
 //		setUndecorated(true);
 
-	setVisible(true);
+		setVisible(true);
 
-	setLocationRelativeTo(null);
+		setLocationRelativeTo(null);
 //
 //	pack();
 
-    }
+	}
 
-    public void setPanel(JPanel jpanel) {
-	mainPanel.removeAll();
-	mainPanel.add(jpanel, BorderLayout.CENTER);
-	mainPanel.repaint();
+	public void setPanel(JPanel jpanel) {
+		mainPanel.removeAll();
+		mainPanel.add(jpanel, BorderLayout.CENTER);
+		mainPanel.repaint();
 
-	setLocationRelativeTo(null);
-    }
+		setLocationRelativeTo(null);
+	}
 
 }

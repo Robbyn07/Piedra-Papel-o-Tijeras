@@ -24,5 +24,6 @@ public class Constants {
 	public static String ELEMENTS_PATH = "/ec/edu/ups/resources/textures/elements_sheets.png";
 	public static String ELEMENTS_INV_PATH = "/ec/edu/ups/resources/textures/elements_inv_sheet.png";
 	public static String FACES_PATH = "/ec/edu/ups/resources/textures/faceTextures.png";
+	public static String BACKGROUND_PATH = "/ec/edu/ups/resources/textures/background_start.png";
 
 }
