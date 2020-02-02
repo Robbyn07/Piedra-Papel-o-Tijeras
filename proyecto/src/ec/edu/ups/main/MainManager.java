@@ -1,5 +1,9 @@
 package ec.edu.ups.main;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JPanel;
+
 import ec.edu.ups.controller.statemachine.StateManager;
 import ec.edu.ups.tools.ControlManager;
 import ec.edu.ups.view.Screen;
@@ -16,11 +20,22 @@ public class MainManager {
 	private Window window;
 	private StateManager stateManager;
 
+	private JPanel[] panels;
+	private int currentPanel;
+
+	int aps;
+	int fps;
+	int ups;
+
 	public MainManager(String title) {
 		this.working = false;
 		this.title = title;
 		this.width = Constants.FULL_WIDTH_WINDOW;
 		this.height = Constants.FULL_HEIGHT_WINDOW;
+
+		this.panels = new JPanel[3];
+		this.currentPanel = 0;
+
 	}
 
 	public void startGame() {
@@ -29,12 +44,12 @@ public class MainManager {
 	}
 
 	public void mainLoop() {
-		int aps = 0;
-		int fps = 0;
-		int ups = 0;
+		aps = 0;
+		fps = 0;
+		ups = 0;
 
 		final int NS_PER_SECOND = 1000000000;
-		final byte UPS_OBJECT = 30;
+		final byte UPS_OBJECT = 60;
 		final double NS_PER_UPDATES = NS_PER_SECOND / UPS_OBJECT;
 
 		long updateReference = System.nanoTime();
@@ -48,7 +63,6 @@ public class MainManager {
 		// requestFocus();
 		while (working) {
 			loopStart = System.nanoTime();
-
 			timeElapsed = loopStart - updateReference;
 			updateReference = loopStart;
 
@@ -58,14 +72,12 @@ public class MainManager {
 				update();
 				ups++;
 				delta--;
-
 				print();
 				fps++;
 
 			}
 
 			if (System.nanoTime() - countReference > NS_PER_SECOND) {
-//				System.out.println(title + " | UPS: " + ups + " | FPS: " + fps);
 				ups = 0;
 				fps = 0;
 				countReference = System.nanoTime();
@@ -75,18 +87,108 @@ public class MainManager {
 	}
 
 	private void start() {
+		stateManager = new StateManager(this);
 		screen = new Screen(width, height);
-		window = new Window(this.title, screen, width, height);
-		stateManager = new StateManager();
+		JPanel screenPanel = new JPanel(new BorderLayout());
+		screenPanel.add(screen, BorderLayout.CENTER);
+
+		JPanel startPanel = stateManager.getStartGameState().getStartGameGUI();
+
+		JPanel winnerPanel = stateManager.getGameWinnerManager().getEndGameGUI();
+
+		this.panels[0] = startPanel;
+		this.panels[1] = screenPanel;
+		this.panels[2] = winnerPanel;
+
+		window = new Window(this.title, width, height);
+
+		addCurrentPanel();
+
+	}
+
+	private void addCurrentPanel() {
+		this.window.setPanel(panels[currentPanel]);
+
+//		this.window.setLocationRelativeTo(null);
+		if (currentPanel == 1) {
+			this.window.pack();
+
+		}
+
 	}
 
 	private void update() {
-		ControlManager.keyboard.update();
-		stateManager.update();
+		if (currentPanel == 1) {
+			ControlManager.keyboard.update();
+			stateManager.update();
+		}
+
 	}
 
 	private void print() {
-		screen.print(stateManager);
+		if (currentPanel == 1) {
+			screen.print(stateManager);
+		}
+	}
+
+	public int getAps() {
+		return aps;
+	}
+
+	public void setAps(int aps) {
+		this.aps = aps;
+	}
+
+	public int getFps() {
+		return fps;
+	}
+
+	public void setFps(int fps) {
+		this.fps = fps;
+	}
+
+	public int getUps() {
+		return ups;
+	}
+
+	public void setUps(int ups) {
+		this.ups = ups;
+	}
+
+	public boolean isWorking() {
+		return working;
+	}
+
+	public void setWorking(boolean working) {
+		this.working = working;
+	}
+
+	public int getCurrentPanel() {
+		return currentPanel;
+	}
+
+	public StateManager getStateManager() {
+		return stateManager;
+	}
+
+	public void setStateManager(StateManager stateManager) {
+		this.stateManager = stateManager;
+	}
+
+	public JPanel[] getPanels() {
+		return panels;
+	}
+
+	public void setPanels(JPanel[] panels) {
+		this.panels = panels;
+	}
+
+	public void setCurrentPanel(int currentPanel) {
+		this.currentPanel = currentPanel;
+
+		this.stateManager.changeState(currentPanel);
+		addCurrentPanel();
+
 	}
 
 }

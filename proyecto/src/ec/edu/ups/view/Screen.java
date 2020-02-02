@@ -37,21 +37,24 @@ public class Screen extends Canvas {
 	}
 
 	public void print(final StateManager stateManager) {
-		BufferStrategy buffer = getBufferStrategy();
 
-		if (buffer == null) {
-			createBufferStrategy(4);
-			return;
+		if (this.isDisplayable()) {
+			BufferStrategy buffer = getBufferStrategy();
+			if (buffer == null) {
+				createBufferStrategy(4);
+				return;
+			}
+
+			Graphics2D g = (Graphics2D) buffer.getDrawGraphics();
+			g.scale(Constants.SCALED_X, Constants.SCALED_Y);
+			stateManager.print(g);
+
+			Toolkit.getDefaultToolkit().sync();
+			g.dispose();
+
+			buffer.show();
 		}
 
-		Graphics2D g = (Graphics2D) buffer.getDrawGraphics();
-		g.scale(Constants.SCALED_X, Constants.SCALED_Y);
-		stateManager.print(g);
-
-		Toolkit.getDefaultToolkit().sync();
-		g.dispose();
-
-		buffer.show();
 	}
 
 }
