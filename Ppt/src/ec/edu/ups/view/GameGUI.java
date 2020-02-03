@@ -99,9 +99,7 @@ public class GameGUI {
 			for (int j = 0; j < nE; j++) {
 				players[i].getElements()[j].paint(g);
 			}
-
 		}
-
 	}
 
 	private void paintGameData() {
@@ -117,8 +115,10 @@ public class GameGUI {
 		// Drawn.drawString(g, players[0].getName(), w - 665, h - 30, Color.BLUE);
 		// Drawn.drawString(g, players[1].getName(), w - 200, h - 30, Color.RED);
 
-		Drawn.drawString(g, players[0].getName(), w - 760, h - 12, Color.BLUE);
-		Drawn.drawString(g, players[1].getName(), w - 140, h - 12, Color.RED);
+//		Drawn.drawString(g, players[0].getName(), w - 760, h - 12, Color.BLUE);
+		Drawn.drawString(g, players[0].getName(), w - 795, h - 12, Color.BLUE);
+//		Drawn.drawString(g, players[1].getName(), w - 140, h - 12, Color.RED);
+		Drawn.drawString(g, players[1].getName(), w - 175, h - 12, Color.RED);
 
 		// Dibujar Tiempo
 		if (gameRuleManager.getSecond() > 0) {
