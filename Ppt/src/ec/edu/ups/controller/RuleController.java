@@ -9,7 +9,7 @@ public class RuleController {
 	private Player player1;
 	private Player player2;
 	private Player winner;
-	
+
 	private Sound sound;
 
 	/*
@@ -19,6 +19,7 @@ public class RuleController {
 
 	private int p1 = 100;
 	private int p2 = 100;
+
 	private int option;
 
 	public RuleController(Player player1, Player player2) {
@@ -204,27 +205,27 @@ public class RuleController {
 		}
 
 	}
-	
+
 	private void paperSound() {
 		this.sound = new Sound("/ec/edu/ups/resources/sounds/paper.wav");
 		this.sound.play();
 	}
-	
+
 	private void scissorSound() {
 		this.sound = new Sound("/ec/edu/ups/resources/sounds/scissors.wav");
 		this.sound.play();
 	}
-	
+
 	private void rockSound() {
 		this.sound = new Sound("/ec/edu/ups/resources/sounds/rock.wav");
 		this.sound.play();
 	}
-	
+
 	private void drawSound() {
 		this.sound = new Sound("/ec/edu/ups/resources/sounds/draw.wav");
 		this.sound.play();
 	}
-	
+
 	private void yaySound() {
 		this.sound = new Sound("/ec/edu/ups/resources/sounds/yay.wav");
 		this.sound.play();
