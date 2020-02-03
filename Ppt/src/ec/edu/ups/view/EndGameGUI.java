@@ -9,7 +9,6 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ec.edu.ups.controller.statemachine.game.GameWinnerManager;
@@ -17,8 +16,6 @@ import ec.edu.ups.main.Constants;
 
 public class EndGameGUI extends JPanel implements ActionListener {
 
-    private JLabel winnerMessage;
-    private JLabel winner;
     private JButton boton;
     private String player;
     private String space = "";
@@ -31,7 +28,7 @@ public class EndGameGUI extends JPanel implements ActionListener {
     private String[] final_images;
 
     public EndGameGUI(GameWinnerManager gameWinnerManager) {
-	path = "/ec/edu/ups/resources/textures/pptarmas.png";
+	//path = "/ec/edu/ups/resources/textures/pptarmas.png";
 	final_images = new String[4];
 	images();
 	// ****
@@ -79,6 +76,7 @@ public class EndGameGUI extends JPanel implements ActionListener {
 	    try {
 		// VOLVER A LA VENTANA INICIAL DEL JUEGO
 		this.gameWinnerManager.getMainMager().setCurrentPanel(0);
+		setImagePath();
 	    } catch (Exception e2) {
 		System.out.println("error");
 	    }
@@ -134,14 +132,15 @@ public class EndGameGUI extends JPanel implements ActionListener {
 	final_images[0] = "/ec/edu/ups/resources/textures/pptarmas.jpg";
 	final_images[1] = "/ec/edu/ups/resources/textures/pptavatar.jpg";
 	final_images[2] = "/ec/edu/ups/resources/textures/pptpegadostodos.jpg";
-	final_images[3] = "/ec/edu/ups/resources/textures/pptpensando.png";
+	final_images[3] = "/ec/edu/ups/resources/textures/pptpensando.jpg";
 
     }
 
     private void setImagePath() {
 	Random r = new Random();
-	int valorDado = r.nextInt(3);
+	int valorDado = r.nextInt(4);
 	this.path = final_images[valorDado];
+	repaint();
     }
 
 }

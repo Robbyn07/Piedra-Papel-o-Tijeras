@@ -102,6 +102,8 @@ public class StartGameGUI extends JPanel implements ActionListener {
 		p4.setLayout(new FlowLayout());
 
 		start = new JButton("OK!");
+		start.setForeground(Color.white);
+		start.setBackground(Color.DARK_GRAY);
 		start.addActionListener(this);
 		start.setActionCommand("comeon");
 		start.setFont(new Font(null, Font.BOLD, 25));
@@ -122,46 +124,50 @@ public class StartGameGUI extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		try {
+			String action = e.getActionCommand();
+			System.out.println("Comando: " + action);
 
-		String action = e.getActionCommand();
-		System.out.println("Comando: " + action);
+			switch (action) {
+			case "comeon":
 
-		switch (action) {
-		case "comeon":
+				String play1 = player1.getText();
+				String play2 = player2.getText();
 
-			String play1 = player1.getText();
-			String play2 = player2.getText();
-
-			if ((play1.length() > 10) || (play2.length() > 10)) {
-				JOptionPane.showMessageDialog(null, "Max. 10 Caracteres.", "ERROR", JOptionPane.ERROR_MESSAGE);
-			} else {
-				if ((play1.length() == 0) || (play2.length() == 0)) {
-					JOptionPane.showMessageDialog(null, "Ingrese el nombre para el jugador.", "ERROR",
-							JOptionPane.ERROR_MESSAGE);
+				if ((play1.length() > 10) || (play2.length() > 10)) {
+					JOptionPane.showMessageDialog(null, "Max. 10 Caracteres.", "ERROR", JOptionPane.ERROR_MESSAGE);
 				} else {
-					int number = Integer.parseInt(turns.getText());
-					if (number <= 0) {
-						JOptionPane.showMessageDialog(null,
-								"Nadie: \n" + "Absolutamente nadie: \n" + "La profe: " + number, "FELICIDADES XD!!",
-								JOptionPane.INFORMATION_MESSAGE);
-
+					if ((play1.length() == 0) || (play2.length() == 0)) {
+						JOptionPane.showMessageDialog(null, "Ingrese el nombre para el jugador.", "ERROR",
+								JOptionPane.ERROR_MESSAGE);
 					} else {
-						this.startGameState.getMainMager().setCurrentPanel(1);
-						this.startGameState.getMainMager().getStateManager().getGameRuleManager()
-								.setRoundNumber(number);
-						this.startGameState.getMainMager().getStateManager().getGameRuleManager().getPlayers()[0]
-								.setName(player1.getText().toUpperCase());
-						this.startGameState.getMainMager().getStateManager().getGameRuleManager().getPlayers()[1]
-								.setName(player2.getText().toUpperCase());
+						int number = Integer.parseInt(turns.getText());
+						if (number <= 0) {
+							JOptionPane.showMessageDialog(null,
+									"Nadie: \n" + "Absolutamente nadie: \n" + "La profe: " + number, "FELICIDADES XD!!",
+									JOptionPane.INFORMATION_MESSAGE);
+
+						} else {
+							this.startGameState.getMainMager().setCurrentPanel(1);
+							this.startGameState.getMainMager().getStateManager().getGameRuleManager()
+									.setRoundNumber(number);
+							this.startGameState.getMainMager().getStateManager().getGameRuleManager().getPlayers()[0]
+									.setName(player1.getText().toUpperCase());
+							this.startGameState.getMainMager().getStateManager().getGameRuleManager().getPlayers()[1]
+									.setName(player2.getText().toUpperCase());
+						}
 					}
 				}
+
+				break;
+
+			default:
+				break;
 			}
-
-			break;
-
-		default:
-			break;
+		} catch (Exception exception) {
+			JOptionPane.showMessageDialog(null, "Ingrese solo números enteros.", "ERROR de Turnos", 2);;
 		}
+		
 
 	}
 
