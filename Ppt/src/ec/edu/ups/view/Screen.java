@@ -4,6 +4,7 @@ package ec.edu.ups.view;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 
@@ -46,7 +47,12 @@ public class Screen extends Canvas {
 	    }
 
 	    Graphics2D g = (Graphics2D) buffer.getDrawGraphics();
+
 	    g.scale(Constants.SCALED_X, Constants.SCALED_Y);
+
+	    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+		    RenderingHints.VALUE_ANTIALIAS_ON);
+
 	    stateManager.print(g);
 
 	    Toolkit.getDefaultToolkit().sync();
